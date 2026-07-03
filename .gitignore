@@ -219,4 +219,4 @@ __marimo__/
 
 # Personal additions
 tests/data/oneFileMode/hub.live.txt
-tests/data/normalMode/trackDb.live.txt
+tests/data/normalMode/mm10/trackDb.live.txt

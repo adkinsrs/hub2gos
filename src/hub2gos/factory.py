@@ -6,10 +6,11 @@ from .components import BigWigSpec, BedSpec, BigInteractSpec, VcfSpec, HiCSpec
 from .containers import MultiWigSpec
 
 TRACK_TYPE_MAP = {
+    #"bam": BamSpec,
     "bigWig": BigWigSpec,
     "bigBed": BedSpec,
     "bigInteract": BigInteractSpec,
-    "vcfTabix": VcfSpec,
+    #"vcfTabix": VcfSpec,
     "hic": HiCSpec,
 }
 

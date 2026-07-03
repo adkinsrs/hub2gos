@@ -1,0 +1,5 @@
+hub normalMode
+shortLabel normalMode
+longLabel Hub file for testing Trackhub normal mode
+genomesFile genomes.txt
+email test_hub2gos@gmail.com

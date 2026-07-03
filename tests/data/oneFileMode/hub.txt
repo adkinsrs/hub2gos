@@ -1,0 +1,45 @@
+hub OneFile_test
+shortLabel OneFile_test
+longLabel Hub file for testing useOneFile mode
+email test_hub2gos@gmail.com
+
+useOneFile on
+
+genome mm10
+
+track test_bigwig
+bigDataUrl https://example.com/test.bigwig
+shortLabel test_bigwig
+longLabel test_bigwig
+color 31,119,180
+autoscale on
+visibility dense
+type bigWig
+
+track test_multiWig
+shortLabel test_multiWig
+longLabel test_multiWig
+type bigWig
+container multiWig
+aggregate transparentOverlay
+showSubtrackColorOnUi on
+maxHeightPixels 500:100:8
+visibility dense
+
+    track bigwig_1
+    parent test_multiWig
+    bigDataUrl https://example.com/bigwig_1.bigwig
+    shortLabel bigwig_1
+    longLabel Multiwig overlay using bigwig_1
+    color 226,173,242
+    autoscale on
+    type bigWig
+
+    track bigwig_2
+    parent test_multiWig
+    bigDataUrl https://example.com/bigwig_2.bigwig
+    shortLabel bigwig_2
+    longLabel Multiwig overlay using bigwig_2
+    color 87,74,226
+    autoscale on
+    type bigWig

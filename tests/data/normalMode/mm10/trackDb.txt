@@ -1,0 +1,17 @@
+track test_bigwig
+bigDataUrl https://example.com/test.bigwig
+shortLabel test_bigwig
+longLabel test_bigwig
+color 31,119,180
+autoscale on
+visibility dense
+type bigWig
+
+track test_HiC
+bigDataUrl https://example.com/test.hic
+shortLabel test_HiC
+longLabel test_HiC
+autoscale on
+visibility dense
+type hic
+gos_url https://example.higlass.com/api/v1/tileset_info/?d=hic_tileset
