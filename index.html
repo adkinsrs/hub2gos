@@ -279,7 +279,22 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="hub2gos.compiler.compile_track_stanzas">
 <span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_track_stanzas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">View</span></span></span><a class="headerlink" href="#hub2gos.compiler.compile_track_stanzas" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Compiles a list of UCSC Trackhub track stanzas into a vertical Gosling View.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>track_descriptors</strong> (<em>list</em>) – A list of dictionaries, each representing a UCSC Trackhub track stanza.</p></li>
+<li><p><strong>coords</strong> (<em>tuple</em><em>, </em><em>optional</em>) – A tuple of (assembly, chromosome, start, end) to set the initial genomic coordinates for the view. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vertical Gosling View containing all tracks and containers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.View</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-hub2gos.factory">
@@ -289,10 +304,12 @@
 <dt class="sig sig-object py" id="hub2gos.factory.TrackSpecFactory">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.factory.</span></span><span class="sig-name descname"><span class="pre">TrackSpecFactory</span></span><a class="headerlink" href="#hub2gos.factory.TrackSpecFactory" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Factory class to create Gosling TrackSpec instances based on UCSC Trackhub track stanzas.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="hub2gos.factory.TrackSpecFactory.create_track">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">getattr</span></span></span><a class="headerlink" href="#hub2gos.factory.TrackSpecFactory.create_track" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Create a Gosling TrackSpec instance based on the provided UCSC Trackhub track stanza.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -300,10 +317,12 @@
 <dt class="sig sig-object py" id="hub2gos.factory.ViewSpecFactory">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.factory.</span></span><span class="sig-name descname"><span class="pre">ViewSpecFactory</span></span><a class="headerlink" href="#hub2gos.factory.ViewSpecFactory" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Factory class to create Gosling ViewSpec instances based on UCSC Trackhub view stanzas.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="hub2gos.factory.ViewSpecFactory.create_view">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">getattr</span></span></span><a class="headerlink" href="#hub2gos.factory.ViewSpecFactory.create_view" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Create a Gosling ViewSpec instance based on the provided UCSC Trackhub view stanza.</p>
+</dd></dl>
 
 </dd></dl>
 
