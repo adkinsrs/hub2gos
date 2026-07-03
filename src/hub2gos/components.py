@@ -29,16 +29,36 @@ class TrackSpec(ABC):
 
     @abstractmethod
     def get_encoding(self, width, height, prefix="", is_child=False):
+        """
+        Abstract method to be implemented by subclasses to return the Gosling encoding for the track.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str): A prefix to be added to the track ID.
+            is_child (bool): Whether the track is a child track in a composite view.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
         pass
 
     def render(self, prefix=""):
+        """
+        Renders the track encoding if the visibility is not set to "hide".
+
+        Args:
+            prefix (str): A prefix to be added to the track ID.
+
+        Returns:
+            gos.Track or None: The Gosling Track object if visibility is not "hide", otherwise
+        """
         if self.visibility == "hide":
             return None
         return self.get_encoding(self.width, self.height, prefix=prefix, is_child=False)
 
 class BigWigSpec(TrackSpec):
     def get_encoding(self, width, height, prefix="", is_child=False):
-        # Your existing code, cleanly isolated
         bigwig_data = gos.bigwig(url=self.data_url)
         track = (
             gos.Track(data=bigwig_data)
@@ -154,3 +174,55 @@ class HiCSpec(TrackSpec):
                 )
 
         return hic_track
+
+# Work in Progress
+class BamSpec(TrackSpec):
+    def get_encoding(self, width, height, prefix="", is_child=False):
+        bigwig_data = gos.bam(url=self.data_url)
+        track = (
+            gos.Track(data=bigwig_data)
+            .mark_area()
+            .encode(
+                color=gos.Color(value=self.color),
+                tooltip=[
+                    gos.Tooltip(field="position", type="genomic", alt="Position"),
+                    gos.Tooltip(field="value", type="quantitative", alt="Peak value", format=".2"),
+                ],
+                x=gos.X(field="start", type="genomic", axis="none"),
+                xe=gos.X(field="end", type="genomic"),
+                y=gos.Y(field="value", type="quantitative", axis="right", aggregate="count"),
+            )
+            .properties(
+                width=width,
+                id=f"{prefix}track-{self.ident}",
+            )
+        )
+        if not is_child:
+            track = track.properties(height=height, title=self.title)
+        return track
+
+# Work in Progress
+class VcfSpec(TrackSpec):
+    def get_encoding(self, width, height, prefix="", is_child=False):
+        bigwig_data = gos.bam(url=self.data_url)
+        track = (
+            gos.Track(data=bigwig_data)
+            .mark_area()
+            .encode(
+                color=gos.Color(value=self.color),
+                tooltip=[
+                    gos.Tooltip(field="position", type="genomic", alt="Position"),
+                    gos.Tooltip(field="value", type="quantitative", alt="Peak value", format=".2"),
+                ],
+                x=gos.X(field="start", type="genomic", axis="none"),
+                xe=gos.X(field="end", type="genomic"),
+                y=gos.Y(field="value", type="quantitative", axis="right", aggregate="count"),
+            )
+            .properties(
+                width=width,
+                id=f"{prefix}track-{self.ident}",
+            )
+        )
+        if not is_child:
+            track = track.properties(height=height, title=self.title)
+        return track

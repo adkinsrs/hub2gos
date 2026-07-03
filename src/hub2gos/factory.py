@@ -2,15 +2,15 @@
 Takes an existing UCSC Trackhub track stanza and returns the appropriate Gosling Track or View Spec subclass instance.
 """
 
-from .components import BigWigSpec, BedSpec, BigInteractSpec, VcfSpec, HiCSpec
+from .components import BamSpec, BigWigSpec, BedSpec, BigInteractSpec, VcfSpec, HiCSpec
 from .containers import MultiWigSpec
 
 TRACK_TYPE_MAP = {
-    #"bam": BamSpec,
+    "bam": BamSpec,
     "bigWig": BigWigSpec,
     "bigBed": BedSpec,
     "bigInteract": BigInteractSpec,
-    #"vcfTabix": VcfSpec,
+    "vcfTabix": VcfSpec,
     "hic": HiCSpec,
 }
 

@@ -16,6 +16,53 @@ autoscale on
 visibility dense
 type bigWig
 
+track test_bed
+bigDataUrl https://example.com/test.bb
+shortLabel test_bed
+longLabel test_bed
+color 31,119,180
+autoscale on
+visibility dense
+type bigBed
+gos_url https://example.com/test.bed
+
+track test_bam
+bigDataUrl https://example.com/test.bam
+shortLabel test_bam
+longLabel test_bam
+color 31,119,180
+autoscale on
+visibility dense
+type bam
+
+track test_vcf
+bigDataUrl https://example.com/test.vcf
+shortLabel test_vcf
+longLabel test_vcf
+color 31,119,180
+autoscale on
+visibility dense
+type vcfTabix
+
+track test_bigInteract
+bigDataUrl https://example.com/test.bigwig
+shortLabel test_bigInteract
+longLabel test_bigInteract
+color 31,119,180
+autoscale on
+visibility dense
+type bigInteract
+gos_url https://example.higlass.com/api/v1/tileset_info/?d=beddb_tileset
+
+track test_HiC
+bigDataUrl https://example.com/test.hic
+shortLabel test_HiC
+longLabel test_HiC
+autoscale on
+visibility dense
+type hic
+gos_url https://example.higlass.com/api/v1/tileset_info/?d=hic_tileset
+
 track test_multiWig
 shortLabel test_multiWig
 longLabel test_multiWig
