@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Viewer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            margin: 12px;
+        }
+
+        #controls {
+            margin: 0 12px 8px 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            min-width: 340px;
+            flex: 1;
+            padding: 6px 8px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+
+        #error {
+            color: #b00020;
+            margin: 0 12px 8px 12px;
+            white-space: pre-wrap;
+        }
+
+        #viewer {
+            flex: 1;
+            min-height: 0;
+            margin: 0 12px 12px 12px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Quick Viewer</h1>
+
+    <div id="controls">
+
+        <textarea id="specJsonInput" placeholder='Paste Gosling spec JSON here, then click "Load JSON"'></textarea>
+        <div class="row">
+            <button id="loadJsonBtn" type="button">Load JSON</button>
+        </div>
+    </div>
+
+    <div id="error"></div>
+    <div id="viewer"></div>
+
+    <script type="module">
+        const errorEl = document.getElementById("error");
+        const viewerEl = document.getElementById("viewer");
+        const specJsonInput = document.getElementById("specJsonInput");
+        const loadJsonBtn = document.getElementById("loadJsonBtn");
+
+        function showError(msg, err) {
+            console.error(msg, err);
+            errorEl.textContent = `${msg}\n${err?.message ?? err ?? ""}`;
+        }
+
+        function clearError() {
+            errorEl.textContent = "";
+        }
+
+        function parseJsonSpec(jsonText) {
+            try {
+                return JSON.parse(jsonText);
+            } catch (e) {
+                throw new Error(`Invalid JSON: ${e.message}`);
+            }
+        }
+
+        const gos = await import("https://esm.sh/gosling.js@1.0.6");
+        const embedFn = gos.embed ?? gos.default?.embed;
+        if (!embedFn) throw new Error("embed function not found in gosling.js module");
+
+        const embedOpts = { padding: 0, theme: null };
+
+        async function renderSpec(spec) {
+            clearError();
+            viewerEl.innerHTML = "";
+            await embedFn(viewerEl, spec, embedOpts);
+        }
+
+        loadJsonBtn.addEventListener("click", async () => {
+            try {
+                const text = specJsonInput.value.trim();
+                if (!text) throw new Error("Paste JSON first.");
+                const spec = parseJsonSpec(text);
+                await renderSpec(spec);
+            } catch (err) {
+                showError("Failed to load spec from JSON text", err);
+            }
+        });
+    </script>
+</body>
+
+</html>
