@@ -19,8 +19,15 @@ VIEW_TYPE_MAP = {
 }
 
 class TrackSpecFactory:
+    """
+    Factory class to create Gosling TrackSpec instances based on UCSC Trackhub track stanzas.
+    """
+
     @staticmethod
     def create_track(stanza: dict) -> getattr:
+        """
+        Create a Gosling TrackSpec instance based on the provided UCSC Trackhub track stanza.
+        """
         track_type = stanza.get("type")
         spec_class = TRACK_TYPE_MAP.get(track_type)
 
@@ -37,8 +44,15 @@ class TrackSpecFactory:
         )
 
 class ViewSpecFactory:
+    """
+    Factory class to create Gosling ViewSpec instances based on UCSC Trackhub view stanzas.
+    """
+
     @staticmethod
     def create_view(stanza: dict) -> getattr:
+        """
+        Create a Gosling ViewSpec instance based on the provided UCSC Trackhub view stanza.
+        """
         view_type = stanza.get("container")
         if view_type == "multiWig":
             return MultiWigSpec(

@@ -3,7 +3,6 @@ Command line interface to convert UCSC TrackHub trackDb files into Gosling JSON 
 """
 
 import argparse
-import json
 from .parser import parse_tracks_from_trackdb
 from .compiler import compile_track_stanzas
 

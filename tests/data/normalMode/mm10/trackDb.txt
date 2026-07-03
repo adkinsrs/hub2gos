@@ -15,7 +15,7 @@ color 31,119,180
 autoscale on
 visibility dense
 type bigBed
-gos_url https://example.com/test.bed
+gos_url https://example.com/test.bed.gz
 
 track test_bam
 bigDataUrl https://example.com/test.bam
@@ -27,7 +27,7 @@ visibility dense
 type bam
 
 track test_vcf
-bigDataUrl https://example.com/test.vcf
+bigDataUrl https://example.com/test.vcf.gz
 shortLabel test_vcf
 longLabel test_vcf
 color 31,119,180

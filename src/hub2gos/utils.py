@@ -3,7 +3,6 @@ Functions that don't really fit in any other module, but are used in multiple pl
 """
 
 import logging
-import sys
 
 logger = logging.getLogger(__name__)
 

@@ -252,7 +252,17 @@ def parse_hub_from_file(hub_txt: str) -> tuple[dict, list[dict]]:
     return hub_json, track_list
 
 def validate_hub_contents(hub_json: dict, track_stanzas: list) -> bool:
-    """Validate hub and track configurations."""
+    """
+    Validate the contents of a UCSC Trackhub hub.txt file and its track stanzas.
+
+    Args:
+        hub_json (dict): Dictionary containing hub metadata.
+        track_stanzas (list): List of dictionaries, each representing a track stanza.
+
+    Returns:
+        bool: True if the hub contents are valid, False otherwise.
+    """
+
     required_hub_fields = ["hub", "shortLabel", "longLabel", "email", "useOneFile", "genome"]
     for field in required_hub_fields:
         if field not in hub_json:

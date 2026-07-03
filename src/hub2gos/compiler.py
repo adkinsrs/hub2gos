@@ -7,6 +7,16 @@ from .factory import TrackSpecFactory
 from .containers import MultiWigSpec
 
 def compile_track_stanzas(track_descriptors: list, coords=None) -> gos.View:
+    """
+    Compiles a list of UCSC Trackhub track stanzas into a vertical Gosling View.
+
+    Args:
+        track_descriptors (list): A list of dictionaries, each representing a UCSC Trackhub track stanza.
+        coords (tuple, optional): A tuple of (assembly, chromosome, start, end) to set the initial genomic coordinates for the view. Defaults to None.
+
+    Returns:
+        gos.View: A vertical Gosling View containing all tracks and containers.
+    """
     rendered_tracks = []
     multiwig_groups = {}
 

@@ -13,7 +13,21 @@ CONDENSED_HEIGHT = 25
 EXPANDED_HEIGHT = 50
 
 class TrackSpec(ABC):
+    """
+    Abstract base class for Gosling Track specifications. Subclasses should implement the get_encoding method to define how the track is rendered.
+    """
+
     def __init__(self, data_url, color="steelblue", title="", ident="", visibility="full"):
+        """
+        Initializes a TrackSpec instance.
+
+        Args:
+            data_url (str): The URL to the data file (e.g., BigWig, BED, etc.).
+            color (str): The color to use for the track. Defaults to "steelblue".
+            title (str): The title of the track. Defaults to an empty string.
+            ident (str): An identifier for the track. Defaults to the title if not provided.
+            visibility (str): The visibility of the track ("full", "dense", "hide").
+        """
         self.data_url = data_url
         self.color = color
         self.width = EXPANDED_WIDTH
@@ -58,7 +72,23 @@ class TrackSpec(ABC):
         return self.get_encoding(self.width, self.height, prefix=prefix, is_child=False)
 
 class BigWigSpec(TrackSpec):
+    """
+    Represents a Gosling Track specification for BigWig files.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
+        """
+        Gets the Gosling encoding for the BigWig track.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
         bigwig_data = gos.bigwig(url=self.data_url)
         track = (
             gos.Track(data=bigwig_data)
@@ -83,7 +113,25 @@ class BigWigSpec(TrackSpec):
         return track
 
 class BedSpec(TrackSpec):
+    """
+    Represents a Gosling Track specification for BED files.
+    Since BigBed files are not directly supported in Gosling, this method uses a gzipped BED file for visualization.
+    An index file is required for this track type and is assumed to be located at the same URL with a BGZF-formatted .tbi extension.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
+        """
+        Gets the Gosling encoding for the BigBed track.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
         bed_data = gos.bed(url=self.data_url, indexUrl=f"{self.data_url}.tbi")
         track = (
             gos.Track(data=bed_data)
@@ -103,8 +151,26 @@ class BedSpec(TrackSpec):
         return track
 
 class BigInteractSpec(TrackSpec):
+    """
+    Represents a Gosling Track specification for BigInteract (chromatin interaction) files.
+    This class is designed to handle BigInteract data visualization using a BEDDB-formatted file, which is typically stored on a HiGlass server.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
-        sashimi_data = os_data = gos.beddb(
+        """
+        Gets the Gosling encoding for the BigInteract track.
+        Since BigInteract files are only compatible with UCSC, this method uses a BEDDB-formatted file for visualization.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
+        biginteract_data = gos.beddb(
             url=self.data_url,
             genomicFields=[
                 {"index": 1, "name": "start"},
@@ -115,7 +181,7 @@ class BigInteractSpec(TrackSpec):
             ],
         )
         track = (
-            gos.Track(data=sashimi_data)
+            gos.Track(data=biginteract_data)
             .mark_withinLink()
             .encode(
                 x=gos.X(field="start", type="genomic", axis="none"),
@@ -131,7 +197,25 @@ class BigInteractSpec(TrackSpec):
         return track
 
 class HiCSpec(TrackSpec):
+    """
+    Represents a Gosling Track specification for HiC (chromatin interaction) files.
+    This class is designed to handle HiC data visualization using a cooler-formatted file, which is typically stored on a HiGlass server.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
+        """
+        Gets the Gosling encoding for the HiC track.
+        Since HiC files are only compatible with UCSC, this method uses a cooler-formatted file for visualization.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
         url = self.data_url
         #color = self.color  # colorscale instead of single color
 
@@ -177,10 +261,29 @@ class HiCSpec(TrackSpec):
 
 # Work in Progress
 class BamSpec(TrackSpec):
+    """
+    This class is a work in progress and may not be fully functional.
+
+    Represents a Gosling Track specification for BAM (Binary Alignment/Map) files.
+    An index file is required for this track type and is assumed to be located at the same URL with a .bai extension.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
-        bigwig_data = gos.bam(url=self.data_url)
+        """
+        Gets the Gosling encoding for the Bam track.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
+        bam_data = gos.bam(url=self.data_url, indexUrl=f"{self.data_url}.bai")
         track = (
-            gos.Track(data=bigwig_data)
+            gos.Track(data=bam_data)
             .mark_area()
             .encode(
                 color=gos.Color(value=self.color),
@@ -203,10 +306,29 @@ class BamSpec(TrackSpec):
 
 # Work in Progress
 class VcfSpec(TrackSpec):
+    """
+    This class is a work in progress and may not be fully functional.
+
+    Represents a Gosling Track specification for VCF (Variant Call Format) files.  The file must be gzipped
+    An index file is required for this track type and is assumed to be located at the same URL with a BGZF-formatted .tbi extension.
+    """
+
     def get_encoding(self, width, height, prefix="", is_child=False):
-        bigwig_data = gos.bam(url=self.data_url)
+        """
+        Gets the Gosling encoding for the VCF track.
+
+        Args:
+            width (int): The width of the track.
+            height (int): The height of the track.
+            prefix (str, optional): A prefix to be added to the track ID. Defaults to "".
+            is_child (bool, optional): Whether the track is a child track in a composite view. Defaults to False.
+
+        Returns:
+            gos.Track: A Gosling Track object representing the track encoding.
+        """
+        vcf_data = gos.vcf(url=self.data_url, indexUrl=f"{self.data_url}.tbi")
         track = (
-            gos.Track(data=bigwig_data)
+            gos.Track(data=vcf_data)
             .mark_area()
             .encode(
                 color=gos.Color(value=self.color),
