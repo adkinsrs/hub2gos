@@ -26,7 +26,10 @@ dependencies = [
 hub2gos = "hub2gos.cli:main"
 
 [project.urls]
-"Homepage" = "https://github.com/adkinsrs/hub2gos"
+"Repository" = "https://github.com/adkinsrs/hub2gos"
+"Documentation" = "https://adkinsrs.github.io/hub2gos/"
+"Changelog" = "https://github.com/adkinsrs/hub2gos/blob/main/CHANGELOG.md"
+"Issues" = "https://github.com/adkinsrs/hub2gos/issues"
 
 [tool.bumpversion]
 current_version = "0.1.0"
