@@ -10,12 +10,12 @@ When converting a UCSC Track Hub configuration using `hub2gos`, input data URLs 
 
 | UCSC Track Type | Expected File Suffix(es) | gos_url file? | Tabix Index Required? | Work-in-progress? |
 | :--- | :--- | :--- | :--- | :--- |
-| **BAM** | `.bam` | Yes (Natively baked BGZF) | Yes (`.bam.bai`) | Yes |
+| **BAM** | `.bam` | No | Yes (`.bam.bai`) | Yes |
 | **BigBed** | `.bb`, `.bigbed` | `.bed.gz` | **Yes (BGZF-formatted `.tbi`)**  | No |
 | **BigInteract** | `.bi`, `.bigInteract` | "beddb" HiGlass tileset | No | No |
 | **BigWig** | `.bw`, `.bigwig` | No | No | No |
 | **HiC** | `.hic` | "cooler" HiGlass tileset | No | No |
-| **VCF** | `.vcf.gz` | **Yes (Must be BGZF)** | **Yes (BGZF-formatted `.tbi`)** | Yes |
+| **VCF** | `.vcf.gz` | No | **Yes (BGZF-formatted `.tbi`)** | Yes |
 
 > ⚠️ **Performance Note on BAM Tracks:** While natively supported by Gosling, rendering BAM files over a broad genomic coordinate range can degrade client-side performance. For better performance, consider converting BAM files to BigWig (for depth density) or BigBed/BED (for structural mutations) during your server pipeline staging.
 
