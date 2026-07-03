@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hub2gos"
-version = "0.1.0"
+version = "0.0.1"
 authors = [
   { name="Shaun Adkins", email="shaun.adkins@gmail.com" },
 ]
@@ -20,8 +20,6 @@ classifiers = [
 dependencies = [
     "requests>=2.28.0",
     "gosling>=0.3.0",
-    "hic2cool>=0.8.3",
-    "pybigwig>=0.3.25",
 ]
 
 [project.scripts]
@@ -31,7 +29,7 @@ hub2gos = "hub2gos.cli:main"
 "Homepage" = "https://github.com/adkinsrs/hub2gos"
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.0.1"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 commit = true
