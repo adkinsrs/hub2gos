@@ -3,7 +3,6 @@ Handles Gosling Track configurations for different data types (BigWig, BED, BigI
 """
 
 from abc import ABC, abstractmethod
-import sys
 import gosling as gos
 
 # Layout defaults
@@ -89,7 +88,7 @@ class BigWigSpec(TrackSpec):
         Returns:
             gos.Track: A Gosling Track object representing the track encoding.
         """
-        bigwig_data = gos.bigwig(url=self.data_url)
+        bigwig_data = gos.BigWigData(type="bigwig", url=self.data_url)
         track = (
             gos.Track(data=bigwig_data)
             .mark_area()
@@ -132,7 +131,7 @@ class BedSpec(TrackSpec):
         Returns:
             gos.Track: A Gosling Track object representing the track encoding.
         """
-        bed_data = gos.bed(url=self.data_url, indexUrl=f"{self.data_url}.tbi")
+        bed_data = gos.BedData(type="bed", url=self.data_url, indexUrl=f"{self.data_url}.tbi")
         track = (
             gos.Track(data=bed_data)
             .mark_rect()
@@ -170,7 +169,8 @@ class BigInteractSpec(TrackSpec):
         Returns:
             gos.Track: A Gosling Track object representing the track encoding.
         """
-        biginteract_data = gos.beddb(
+        biginteract_data = gos.BeddbData(
+            type="beddb",
             url=self.data_url,
             genomicFields=[
                 {"index": 1, "name": "start"},
@@ -231,7 +231,7 @@ class HiCSpec(TrackSpec):
             pink: interpolateRdPu
         """
 
-        hic_data = gos.matrix(url=url)
+        hic_data = gos.MatrixData(type="matrix", url=url)
 
         hic_track = (
             gos.Track(
@@ -281,7 +281,7 @@ class BamSpec(TrackSpec):
         Returns:
             gos.Track: A Gosling Track object representing the track encoding.
         """
-        bam_data = gos.bam(url=self.data_url, indexUrl=f"{self.data_url}.bai")
+        bam_data = gos.BamData(type="bam", url=self.data_url, indexUrl=f"{self.data_url}.bai")
         track = (
             gos.Track(data=bam_data)
             .mark_area()
@@ -326,7 +326,7 @@ class VcfSpec(TrackSpec):
         Returns:
             gos.Track: A Gosling Track object representing the track encoding.
         """
-        vcf_data = gos.vcf(url=self.data_url, indexUrl=f"{self.data_url}.tbi")
+        vcf_data = gos.VcfData(type="vcf", url=self.data_url, indexUrl=f"{self.data_url}.tbi")
         track = (
             gos.Track(data=vcf_data)
             .mark_area()
