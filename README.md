@@ -1,5 +1,7 @@
 # hub2gos
 
+[![PyPI Version](https://img.shields.io/pypi/v/hub2gos.svg)](https://pypi.org/project/hub2gos/) [![Supported Python Versions](https://img.shields.io/pypi/pyversions/hub2gos.svg)](https://pypi.org/project/hub2gos/) [![License](https://img.shields.io/github/license/adkinsrs/hub2gos.svg)](https://github.com/adkinsrs/hub2gos/blob/main/LICENSE)
+
 Transpiler to map a UCSC Trackhub configuration to a Gosling spec
 
 ## Input Data Specifications & Compression Rules
