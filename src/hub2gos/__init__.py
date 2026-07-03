@@ -1,3 +1,5 @@
+__version__ = "0.0.1"
+
 import logging
 
 # Sets up logging messages to be destroyed on default
