@@ -5,13 +5,6 @@ Welcome to hub2gos documentation!
    :maxdepth: 2
    :caption: Contents:
 
-Command Line Interface (CLI)
-============================
-- automodule:: hub2gos.cli
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Core Compiler Modules
 =====================
 
