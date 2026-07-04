@@ -3,8 +3,12 @@ name: Test Suite
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'src/hub2gos/**'
   pull_request:
     branches: [ main ]
+    paths:
+      - 'src/hub2gos/**'
 
 jobs:
   test:
