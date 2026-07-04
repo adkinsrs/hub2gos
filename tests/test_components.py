@@ -9,10 +9,8 @@ from hub2gos.components import (
     BigInteractSpec,
     HiCSpec,
     VcfSpec,
-    CONDENSED_WIDTH,
-    EXPANDED_WIDTH,
-    CONDENSED_HEIGHT,
-    EXPANDED_HEIGHT,
+    TRACK_DEFAULT_WIDTH,
+    TRACK_DEFAULT_HEIGHT,
 )
 
 TEST_URL = "https://example.com/test_file"
@@ -51,11 +49,11 @@ class TestTrackSpecConstructor:
 
     def test_visibility_full_inflates_height(self):
         spec = BigWigSpec(data_url=TEST_URL, visibility="full")
-        assert spec.height == EXPANDED_HEIGHT * 1.5
+        assert spec.height == TRACK_DEFAULT_HEIGHT * 1.5
 
     def test_visibility_dense_keeps_base_height(self):
         spec = BigWigSpec(data_url=TEST_URL, visibility="dense")
-        assert spec.height == EXPANDED_HEIGHT
+        assert spec.height == TRACK_DEFAULT_HEIGHT
 
     def test_data_url_stored(self):
         spec = BigWigSpec(data_url=TEST_URL)
@@ -94,44 +92,44 @@ class TestBigWigSpec:
         return BigWigSpec(data_url=TEST_URL, title="BigWig Track", ident="bw1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_bigwig(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         d = track.to_dict()
         assert d["data"]["type"] == "bigwig"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_mark_is_area(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["mark"] == "area"
 
     def test_title_set_when_not_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=False)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=False)
         assert track.to_dict().get("title") == "BigWig Track"
 
     def test_title_absent_when_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=True)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=True)
         assert "title" not in track.to_dict()
 
     def test_id_uses_prefix_and_ident(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, prefix="pfx-")
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, prefix="pfx-")
         assert track.to_dict()["id"] == "pfx-track-bw1"
 
     def test_has_x_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert "x" in track.to_dict()
 
     def test_has_y_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert "y" in track.to_dict()
 
     def test_has_tooltip(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert "tooltip" in track.to_dict()
 
 
@@ -145,31 +143,31 @@ class TestBedSpec:
         return BedSpec(data_url=TEST_URL, title="BED Track", ident="bed1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_bed(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["type"] == "bed"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_index_url_appends_tbi(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["indexUrl"] == f"{TEST_URL}.tbi"
 
     def test_mark_is_rect(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["mark"] == "rect"
 
     def test_title_set_when_not_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=False)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=False)
         assert track.to_dict().get("title") == "BED Track"
 
     def test_title_absent_when_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=True)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=True)
         assert "title" not in track.to_dict()
 
 
@@ -183,34 +181,34 @@ class TestBigInteractSpec:
         return BigInteractSpec(data_url=TEST_URL, title="Interact Track", ident="bi1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_beddb(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["type"] == "beddb"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_mark_is_withinLink(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["mark"] == "withinLink"
 
     def test_genomic_fields_present(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         genomic_fields = track.to_dict()["data"]["genomicFields"]
         names = [f["name"] for f in genomic_fields]
         assert "start" in names
         assert "end" in names
 
     def test_title_set_when_not_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=False)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=False)
         assert track.to_dict().get("title") == "Interact Track"
 
     def test_title_absent_when_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=True)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=True)
         assert "title" not in track.to_dict()
 
 
@@ -224,31 +222,31 @@ class TestHiCSpec:
         return HiCSpec(data_url=TEST_URL, title="HiC Track", ident="hic1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_matrix(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["type"] == "matrix"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_mark_is_bar(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["mark"] == "bar"
 
     def test_color_field_is_value(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["color"]["field"] == "value"
 
     def test_title_set_when_not_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=False)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=False)
         assert track.to_dict().get("title") == "HiC Track"
 
     def test_title_absent_when_child(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT, is_child=True)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT, is_child=True)
         assert "title" not in track.to_dict()
 
 
@@ -262,19 +260,19 @@ class TestBamSpec:
         return BamSpec(data_url=TEST_URL, title="BAM Track", ident="bam1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_bam(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["type"] == "bam"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_index_url_appends_bai(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["indexUrl"] == f"{TEST_URL}.bai"
 
 
@@ -288,17 +286,17 @@ class TestVcfSpec:
         return VcfSpec(data_url=TEST_URL, title="VCF Track", ident="vcf1")
 
     def test_get_encoding_returns_gos_track(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert isinstance(track, gos.Track)
 
     def test_data_type_is_vcf(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["type"] == "vcf"
 
     def test_data_url_in_encoding(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["url"] == TEST_URL
 
     def test_index_url_appends_tbi(self, spec):
-        track = spec.get_encoding(EXPANDED_WIDTH, EXPANDED_HEIGHT)
+        track = spec.get_encoding(TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT)
         assert track.to_dict()["data"]["indexUrl"] == f"{TEST_URL}.tbi"

@@ -6,10 +6,8 @@ from abc import ABC, abstractmethod
 import gosling as gos
 
 # Layout defaults
-CONDENSED_WIDTH = 1180
-EXPANDED_WIDTH = 590
-CONDENSED_HEIGHT = 25
-EXPANDED_HEIGHT = 50
+TRACK_DEFAULT_WIDTH = 1180
+TRACK_DEFAULT_HEIGHT = 25
 
 class TrackSpec(ABC):
     """
@@ -29,8 +27,8 @@ class TrackSpec(ABC):
         """
         self.data_url = data_url
         self.color = color
-        self.width = EXPANDED_WIDTH
-        self.height = EXPANDED_HEIGHT
+        self.width = TRACK_DEFAULT_HEIGHT
+        self.height = TRACK_DEFAULT_HEIGHT
         self.title = title
         self.ident = ident or title
         self.visibility = visibility

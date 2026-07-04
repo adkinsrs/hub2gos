@@ -3,7 +3,7 @@
 import pytest
 import gosling as gos
 from hub2gos.containers import ViewSpec, MultiWigSpec
-from hub2gos.components import BigWigSpec, CONDENSED_WIDTH, CONDENSED_HEIGHT
+from hub2gos.components import BigWigSpec, TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT
 
 TEST_URL = "https://example.com/test_file"
 
@@ -33,11 +33,11 @@ class TestViewSpec:
 
     def test_default_width_is_condensed(self):
         view = ViewSpec()
-        assert view.width == CONDENSED_WIDTH
+        assert view.width == TRACK_DEFAULT_WIDTH
 
     def test_default_height_is_condensed(self):
         view = ViewSpec()
-        assert view.height == CONDENSED_HEIGHT
+        assert view.height == TRACK_DEFAULT_HEIGHT
 
     def test_members_starts_empty(self, view):
         assert view.members == []
@@ -104,12 +104,12 @@ class TestMultiWigSpec:
     def test_render_width_in_dict(self, two_track_view):
         result = two_track_view.render()
         d = result.to_dict()
-        assert d.get("width") == CONDENSED_WIDTH
+        assert d.get("width") == TRACK_DEFAULT_WIDTH
 
     def test_render_height_in_dict(self, two_track_view):
         result = two_track_view.render()
         d = result.to_dict()
-        assert d.get("height") == CONDENSED_HEIGHT
+        assert d.get("height") == TRACK_DEFAULT_HEIGHT
 
     def test_render_has_opacity(self, two_track_view):
         result = two_track_view.render()

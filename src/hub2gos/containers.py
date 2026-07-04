@@ -3,7 +3,7 @@ Handles Gosling specialty View configurations (i.e. grouping multiple tracks int
 """
 
 import gosling as gos
-from .components import TrackSpec, CONDENSED_WIDTH, CONDENSED_HEIGHT
+from .components import TrackSpec, TRACK_DEFAULT_WIDTH, TRACK_DEFAULT_HEIGHT
 
 class ViewSpec:
     """
@@ -22,8 +22,8 @@ class ViewSpec:
         self.title = title
         self.ident = ident or title
         self.visibility = visibility
-        self.width = CONDENSED_WIDTH
-        self.height = CONDENSED_HEIGHT
+        self.width = TRACK_DEFAULT_WIDTH
+        self.height = TRACK_DEFAULT_HEIGHT
         self.members = []
 
     def add_member(self, track: TrackSpec):

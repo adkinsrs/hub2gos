@@ -2,75 +2,83 @@
 
 import pytest
 from pathlib import Path
-from hub2gos.parser import HubParser
+from hub2gos.parser import (
+    parse_hub_from_file,
+    parse_tracks_from_trackdb,
+    validate_hub_contents,
+    fetch_trackdb_path
+)
 
 DATA_DIR = Path(__file__).parent / "data"
-ONE_FILE_DIR = DATA_DIR / "oneFileMode"
-NORMAL_DIR = DATA_DIR / "normalMode"
 
+class TestParserFunctions:
 
-class TestHubParserOneFileMode:
-    """Tests for parsing a useOneFile-mode hub."""
+    def test_parse_hub_from_file(self):
+        hub_path = DATA_DIR / "oneFileMode" / "hub.txt"
+        if not hub_path.exists():
+            pytest.skip("Test data not found")
+
+        hub_txt = hub_path.read_text()
+        hub_json, track_stanzas = parse_hub_from_file(hub_txt)
+
+        assert isinstance(hub_json, dict)
+        assert "hub" in hub_json
+        assert isinstance(track_stanzas, list)
+        assert len(track_stanzas) > 0
+
+    def test_parse_tracks_from_trackdb(self):
+        trackdb_path = DATA_DIR / "normalMode" / "trackDb.txt"
+        if not trackdb_path.exists():
+            pytest.skip("Test data not found")
+
+        trackdb_txt = trackdb_path.read_text()
+        tracks = parse_tracks_from_trackdb(trackdb_txt, "http://example.com/")
+
+        assert isinstance(tracks, list)
+        assert len(tracks) > 0
+        assert "track" in tracks[0]
+
+    def test_fetch_trackdb_path(self):
+        genomes_txt = "genome mm10\ntrackDb mm10/trackDb.txt\n"
+        path = fetch_trackdb_path(genomes_txt, "mm10")
+        assert path == "mm10/trackDb.txt"
+
+    def test_fetch_trackdb_path_raises_value_error(self):
+        genomes_txt = "genome mm10\ntrackDb mm10/trackDb.txt\n"
+        with pytest.raises(ValueError):
+            fetch_trackdb_path(genomes_txt, "hg38")
+
+class TestValidateHubContents:
 
     @pytest.fixture
-    def parser(self):
-        return HubParser(str(ONE_FILE_DIR / "hub.txt"))
+    def valid_hub_json(self):
+        return {
+            "hub": "test", "shortLabel": "Test", "longLabel": "Test",
+            "email": "a@b.com", "useOneFile": "on", "genome": "mm10"
+        }
 
-    def test_is_one_file_mode(self, parser):
-        assert parser.is_one_file_mode is True
+    def test_valid_contents(self, valid_hub_json):
+        track_stanzas = [{
+            "track": "t1", "type": "bigWig", "shortLabel": "t1",
+            "longLabel": "t1", "visibility": "dense", "bigDataUrl": "url"
+        }]
+        assert validate_hub_contents(valid_hub_json, track_stanzas) is True
 
-    def test_hub_short_label(self, parser):
-        assert parser.hub.short_label is not None
+    def test_invalid_missing_hub_field(self):
+        hub_json = {"shortLabel": "Test"} # Missing "hub", "genome", etc.
+        track_stanzas = [{"track": "t1", "type": "bigWig", "shortLabel": "t1", "longLabel": "t1", "visibility": "dense", "bigDataUrl": "url"}]
+        assert validate_hub_contents(hub_json, track_stanzas) is False
 
-    def test_hub_long_label(self, parser):
-        assert parser.hub.long_label is not None
+    def test_invalid_missing_data_url_or_container(self, valid_hub_json):
+        track_stanzas = [{
+            "track": "t1", "type": "bigWig", "shortLabel": "t1",
+            "longLabel": "t1", "visibility": "dense"
+        }]
+        assert validate_hub_contents(valid_hub_json, track_stanzas) is False
 
-    def test_genomes_parsed(self, parser):
-        assert len(parser.genomes) >= 1
-
-    def test_tracks_parsed(self, parser):
-        all_tracks = [t for g in parser.genomes for t in g.tracks]
-        assert len(all_tracks) >= 1
-
-    def test_track_types_present(self, parser):
-        all_tracks = [t for g in parser.genomes for t in g.tracks]
-        track_types = {t.track_type for t in all_tracks}
-        # At least one supported type should be present
-        supported = {"bigWig", "bigBed", "vcfTabix", "bigBarChart", "bigInteract"}
-        assert track_types & supported, f"No supported track types found in {track_types}"
-
-
-class TestHubParserNormalMode:
-    """Tests for parsing a standard (multi-file) hub."""
-
-    @pytest.fixture
-    def parser(self):
-        return HubParser(str(NORMAL_DIR / "hub.txt"))
-
-    def test_is_not_one_file_mode(self, parser):
-        assert parser.is_one_file_mode is False
-
-    def test_hub_short_label(self, parser):
-        assert parser.hub.short_label is not None
-
-    def test_genomes_parsed(self, parser):
-        assert len(parser.genomes) >= 1
-
-    def test_mm10_genome_present(self, parser):
-        genome_names = [g.genome for g in parser.genomes]
-        assert "mm10" in genome_names
-
-    def test_tracks_parsed(self, parser):
-        all_tracks = [t for g in parser.genomes for t in g.tracks]
-        assert len(all_tracks) >= 1
-
-    def test_track_types_present(self, parser):
-        all_tracks = [t for g in parser.genomes for t in g.tracks]
-        track_types = {t.track_type for t in all_tracks}
-        supported = {"bigWig", "bigBed", "vcfTabix", "bigBarChart", "bigInteract"}
-        assert track_types & supported, f"No supported track types found in {track_types}"
-
-    def test_trackdb_url_resolved(self, parser):
-        """Each genome entry should have its trackDb path resolved."""
-        for genome in parser.genomes:
-            assert genome.trackdb_path is not None
+    def test_invalid_unsupported_track_type(self, valid_hub_json):
+        track_stanzas = [{
+            "track": "t1", "type": "unsupportedType", "shortLabel": "t1",
+            "longLabel": "t1", "visibility": "dense", "bigDataUrl": "url"
+        }]
+        assert validate_hub_contents(valid_hub_json, track_stanzas) is False
