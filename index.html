@@ -278,13 +278,13 @@
 <p>Takes parsed UCSC Trackhub file track stanzas and returns a vertical Gosling View containing all tracks and containers.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="hub2gos.compiler.compile_track_stanzas">
-<span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_track_stanzas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">View</span></span></span><a class="headerlink" href="#hub2gos.compiler.compile_track_stanzas" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_track_stanzas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">View</span></span></span><a class="headerlink" href="#hub2gos.compiler.compile_track_stanzas" title="Link to this definition">#</a></dt>
 <dd><p>Compiles a list of UCSC Trackhub track stanzas into a vertical Gosling View.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>track_descriptors</strong> (<em>list</em>) – A list of dictionaries, each representing a UCSC Trackhub track stanza.</p></li>
-<li><p><strong>coords</strong> (<em>tuple</em><em>, </em><em>optional</em>) – A tuple of (assembly, chromosome, start, end) to set the initial genomic coordinates for the view. Defaults to None.</p></li>
+<li><p><strong>coords</strong> (<em>str</em><em>, </em><em>optional</em>) – A string representing the initial genomic coordinates for the view in the format (chromosome, start, end). Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -294,6 +294,25 @@
 <dd class="field-odd"><p>gos.View</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.compiler.zoom_view_to_domain">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">zoom_view_to_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.compiler.zoom_view_to_domain" title="Link to this definition">#</a></dt>
+<dd><p>Zooms a Gosling view to a specified genomic domain with padding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>view</strong> – A Gosling view object to be updated.</p></li>
+<li><p><strong>position_str</strong> (<em>str</em>) – A string representing the genomic position in the format expected by <cite>parse_position_str</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated Gosling view object with its xDomain set to the specified genomic coordinates plus padding.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Adds a base padding of 1500 base pairs to both sides of the specified genomic interval.</p>
 </dd></dl>
 
 </section>
@@ -360,6 +379,7 @@
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hub2gos documentation!</a></li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.compiler">Core Compiler Modules</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.compile_track_stanzas"><code class="docutils literal notranslate"><span class="pre">compile_track_stanzas()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.zoom_view_to_domain"><code class="docutils literal notranslate"><span class="pre">zoom_view_to_domain()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.factory">Track Factory Engine</a><ul class="pst-show_toc_level nav section-nav flex-column">
