@@ -79,7 +79,7 @@ class TestCliNormalMode:
     def test_missing_assembly_failure(self):
         result = run_cli(NORMAL_HUB)
         assert result.returncode != 0
-        assert "assembly mm10 not found in genomes.txt" in result.stderr.lower()
+        assert "assembly must be specified" in result.stderr.lower()
 
     def test_runs_without_error(self):
         result = run_cli(NORMAL_HUB, "-a", "mm10")
@@ -148,6 +148,6 @@ class TestCliEdgeCases:
 
     def test_stdout_is_empty_when_output_file_given(self, tmp_path):
         out_file = tmp_path / "out.json"
-        result = run_cli(NORMAL_HUB, "-o", str(out_file))
+        result = run_cli(ONE_FILE_HUB, "-o", str(out_file))
         assert result.returncode == 0, result.stderr
         assert result.stdout.strip() == ""

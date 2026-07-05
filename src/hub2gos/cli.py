@@ -58,6 +58,9 @@ def main():
 
         genomes_file = hub_dir / genomes_file_name
 
+        if not args.assembly:
+            raise ValueError("Assembly must be specified with -a/--assembly with a standard mode UCSC Trackhub file.")
+
         logger.debug(f"Looking for genomes.txt at {genomes_file}")
         if not genomes_file.is_file():
             raise FileNotFoundError(f"genomes.txt not found at {genomes_file}")

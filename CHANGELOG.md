@@ -5,7 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.1]
+
+### Changed
+
+- Moved assembly check earlier for a fail-fast approach.
+
+### Fixes
+
+- Fixing test_cli_integration.py pytest fixture where assembly is not passed for a UCSC standard trackhub.
+
+## [0.2.0]
 
 ### Notes
 
