@@ -7,7 +7,7 @@ import gosling as gos
 
 # Layout defaults
 TRACK_DEFAULT_WIDTH = 1180
-TRACK_DEFAULT_HEIGHT = 25
+TRACK_DEFAULT_HEIGHT = 50
 
 class TrackSpec(ABC):
     """
@@ -27,7 +27,7 @@ class TrackSpec(ABC):
         """
         self.data_url = data_url
         self.color = color
-        self.width = TRACK_DEFAULT_HEIGHT
+        self.width = TRACK_DEFAULT_WIDTH
         self.height = TRACK_DEFAULT_HEIGHT
         self.title = title
         self.ident = ident or title
@@ -96,7 +96,7 @@ class BigWigSpec(TrackSpec):
                     gos.Tooltip(field="position", type="genomic", alt="Position"),
                     gos.Tooltip(field="value", type="quantitative", alt="Peak value", format=".2"),
                 ],
-                x=gos.X(field="start", type="genomic", axis="none"),
+                x=gos.X(field="start", type="genomic", axis="top"),
                 xe=gos.X(field="end", type="genomic"),
                 y=gos.Y(field="value", type="quantitative", axis="right", aggregate="count"),
             )
@@ -134,7 +134,7 @@ class BedSpec(TrackSpec):
             gos.Track(data=bed_data)
             .mark_rect()
             .encode(
-                x=gos.X(field="start", type="genomic", axis="none"),
+                x=gos.X(field="start", type="genomic", axis="top"),
                 xe=gos.X(field="end", type="genomic"),
                 size=gos.Size(value=10),
                 color=gos.Color(value=self.color),
@@ -182,7 +182,7 @@ class BigInteractSpec(TrackSpec):
             gos.Track(data=biginteract_data)
             .mark_withinLink()
             .encode(
-                x=gos.X(field="start", type="genomic", axis="none"),
+                x=gos.X(field="start", type="genomic", axis="top"),
                 xe=gos.X(field="end", type="genomic"),
                 color=gos.Color(value=self.color),
             ).properties(
@@ -237,7 +237,7 @@ class HiCSpec(TrackSpec):
             )
             .mark_bar()
             .encode(
-                x=gos.X(field="xs", type="genomic", axis="bottom"),  # pyright: ignore[reportArgumentType]
+                x=gos.X(field="xs", type="genomic", axis="top"),  # pyright: ignore[reportArgumentType]
                 xe=gos.Xe(field="xe", type="genomic", axis="none"),  # pyright: ignore[reportArgumentType]
                 y=gos.Y(field="ys", type="genomic", axis="none"),  # pyright: ignore[reportArgumentType]
                 ye=gos.Ye(field="ye", type="genomic", axis="none"),  # pyright: ignore[reportArgumentType]
@@ -245,13 +245,14 @@ class HiCSpec(TrackSpec):
                 style=gos.Style(matrixExtent="full"), # pyright: ignore[reportArgumentType]
             ).properties(
                 width=width,
+                height=width,   # Keep square aspect ratio
                 id=f"{prefix}track-{self.ident}",  # Use the file name without extension as the ID
             )
         )
 
         if not is_child:
             hic_track = hic_track.properties(
-                height=height,
+                height=width,
                 title=self.title
                 )
 
@@ -289,7 +290,7 @@ class BamSpec(TrackSpec):
                     gos.Tooltip(field="position", type="genomic", alt="Position"),
                     gos.Tooltip(field="value", type="quantitative", alt="Peak value", format=".2"),
                 ],
-                x=gos.X(field="start", type="genomic", axis="none"),
+                x=gos.X(field="start", type="genomic", axis="top"),
                 xe=gos.X(field="end", type="genomic"),
                 y=gos.Y(field="value", type="quantitative", axis="right", aggregate="count"),
             )
@@ -334,7 +335,7 @@ class VcfSpec(TrackSpec):
                     gos.Tooltip(field="position", type="genomic", alt="Position"),
                     gos.Tooltip(field="value", type="quantitative", alt="Peak value", format=".2"),
                 ],
-                x=gos.X(field="start", type="genomic", axis="none"),
+                x=gos.X(field="start", type="genomic", axis="top"),
                 xe=gos.X(field="end", type="genomic"),
                 y=gos.Y(field="value", type="quantitative", axis="right", aggregate="count"),
             )

@@ -218,6 +218,6 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Personal additions
-tests/data/oneFileMode/hub.live.txt
-tests/data/normalMode/mm10/trackDb.live.txt
+tests/data/oneFileMode/*.live.txt
+tests/data/normalMode/**/*.live.txt
 **/.DS_Store

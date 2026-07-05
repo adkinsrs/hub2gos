@@ -50,6 +50,11 @@ class TestCliOneFileMode:
         result = run_cli(ONE_FILE_HUB)
         spec = json.loads(result.stdout)
         assert "views" in spec or "tracks" in spec
+        # assert that the "views" or "tracks" have contents
+        if "views" in spec:
+            assert len(spec["views"]) > 0
+        if "tracks" in spec:
+            assert len(spec["tracks"]) > 0
 
     def test_output_file_flag_short(self, tmp_path):
         out_file = tmp_path / "out.json"
@@ -85,6 +90,11 @@ class TestCliNormalMode:
         result = run_cli(NORMAL_HUB)
         spec = json.loads(result.stdout)
         assert "views" in spec or "tracks" in spec
+        # assert that the "views" or "tracks" have contents
+        if "views" in spec:
+            assert len(spec["views"]) > 0
+        if "tracks" in spec:
+            assert len(spec["tracks"]) > 0
 
     def test_output_file_flag_short(self, tmp_path):
         out_file = tmp_path / "out.json"

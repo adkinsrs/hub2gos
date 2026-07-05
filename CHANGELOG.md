@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added pytest CI/CD Github Action with an accompanying badge in the README
 
+### Changed
+
+- Changing default track height from 25 to 50px
+- Fixing bug with width not being set properly for non-multiwig track files
+- Added "axis=top" to the x-axis property for each track.
+- HiC tracks will use the "width" value for width and height.  This helps with keeping the aspect ratio square.
+
 ## [0.1.1] - 2026-07-03
 
 ### Added
