@@ -7,6 +7,9 @@ from .factory import TrackSpecFactory
 from .containers import MultiWigSpec
 from .utils import parse_position_str
 
+# TODO: Add a linker mark so that all tracks can be zoomable together.
+# TODO: Possibly just put the x-axis at the top of the view (first track).
+
 def compile_track_stanzas(track_descriptors: list, coords: str|None=None) -> gos.View:
     """
     Compiles a list of UCSC Trackhub track stanzas into a vertical Gosling View.
