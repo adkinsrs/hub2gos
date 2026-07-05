@@ -76,18 +76,23 @@ class TestCliOneFileMode:
 # ---------------------------------------------------------------------------
 
 class TestCliNormalMode:
-    def test_runs_without_error(self):
+    def test_missing_assembly_failure(self):
         result = run_cli(NORMAL_HUB)
+        assert result.returncode != 0
+        assert "assembly mm10 not found in genomes.txt" in result.stderr.lower()
+
+    def test_runs_without_error(self):
+        result = run_cli(NORMAL_HUB, "-a", "mm10")
         assert result.returncode == 0, result.stderr
 
     def test_outputs_valid_json(self):
-        result = run_cli(NORMAL_HUB)
+        result = run_cli(NORMAL_HUB, "-a", "mm10")
         assert result.returncode == 0, result.stderr
         spec = json.loads(result.stdout)
         assert isinstance(spec, dict)
 
     def test_output_has_views_or_tracks(self):
-        result = run_cli(NORMAL_HUB)
+        result = run_cli(NORMAL_HUB, "-a", "mm10")
         spec = json.loads(result.stdout)
         assert "views" in spec or "tracks" in spec
         # assert that the "views" or "tracks" have contents
@@ -98,22 +103,22 @@ class TestCliNormalMode:
 
     def test_output_file_flag_short(self, tmp_path):
         out_file = tmp_path / "out.json"
-        result = run_cli(NORMAL_HUB, "-o", str(out_file))
+        result = run_cli(NORMAL_HUB, "-a", "mm10", "-o", str(out_file))
         assert result.returncode == 0, result.stderr
         assert out_file.exists()
         spec = json.loads(out_file.read_text())
         assert isinstance(spec, dict)
 
     def test_coords_flag_short(self):
-        result = run_cli(NORMAL_HUB, "-c", "chr1:1000000-2000000")
+        result = run_cli(NORMAL_HUB, "-a", "mm10", "-c", "chr1:1000000-2000000")
         assert result.returncode == 0, result.stderr
 
     def test_coords_flag_long(self):
-        result = run_cli(NORMAL_HUB, "--coords", "chr1:1000000-2000000")
+        result = run_cli(NORMAL_HUB, "-a", "mm10", "--coords", "chr1:1000000-2000000")
         assert result.returncode == 0, result.stderr
 
     def test_coords_output_is_valid_json(self):
-        result = run_cli(NORMAL_HUB, "-c", "chr1:1000000-2000000")
+        result = run_cli(NORMAL_HUB, "-a", "mm10", "-c", "chr1:1000000-2000000")
         spec = json.loads(result.stdout)
         assert isinstance(spec, dict)
 

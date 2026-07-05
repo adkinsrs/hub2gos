@@ -9,6 +9,8 @@ Transpiler to map a UCSC Trackhub configuration to a Gosling spec
 
 When converting a UCSC Track Hub configuration using `hub2gos`, input data URLs must adhere strictly to the coordinate streaming capabilities of modern web browsers. In addition, some UCSC Track Hub file types are not compatible and must have an alternate file path under the `gos_url` property that will be used to read the data into Gosling instead.  Otherwise the transpiler will use the `bigDataUrl` property instead.
 
+This utility will return a Gosling Spec for the UCSC trackhub input, but does not validate that the supplied paths are streamable. There is a HTML page called `quick_viewer.html` on the top-level of this repository that can be used to validate the Gosling visualization itself by passing in the JSON spec.
+
 ### Supported Formats & Compression Matrices
 
 | UCSC Track Type | Expected File Suffix(es) | gos_url file? | Tabix Index Required? | Work-in-progress? |

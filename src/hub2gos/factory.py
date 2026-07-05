@@ -2,8 +2,12 @@
 Takes an existing UCSC Trackhub track stanza and returns the appropriate Gosling Track or View Spec subclass instance.
 """
 
+import logging
+
 from .components import BamSpec, BigWigSpec, BedSpec, BigInteractSpec, VcfSpec, HiCSpec
 from .containers import MultiWigSpec
+
+logger = logging.getLogger(__name__)
 
 TRACK_TYPE_MAP = {
     "bam": BamSpec,
@@ -33,6 +37,9 @@ class TrackSpecFactory:
 
         if not spec_class:
             return None
+
+        logger.info(f"Creating {spec_class.__name__} for track: {stanza.get('track')} with type: {track_type}")
+        logger.debug(f"Track stanza: {stanza}")
 
         # Dynamically unpack properties into your existing TrackSpec constructor
         return spec_class(

@@ -9,7 +9,6 @@ import logging
 import os
 import requests
 import socket
-import sys
 from urllib.parse import urljoin, urlparse
 
 logger = logging.getLogger(__name__)
@@ -18,9 +17,11 @@ VALID_TYPES = ["bigWig", "bigBed", "hic", "vcfTabix"]
 VALID_CONTAINER_TYPES = ["multiWig"]
 
 # These are the fields that we will use for Gosling, though other fields will be preserved for compatibility with the UCSC Genome Browser.
+# These are valid UCSC fields and will not include custom fields for Gosling (marked with "gos_").
 HUB_FIELDS = ["hub", "shortLabel", "longLabel", "email", "useOneFile", "genome", "genomesFile"]
 TRACK_FIELDS = ["track", "name", "type", "bigDataUrl", "shortLabel", "longLabel", "visibility", "color", "autoScale", "container", "parent"]
 
+# TODO: Support local file and remote file trackhub parsing.  Currently it's local only
 
 def fetch_trackdb_path(genomes_txt: str, assembly: str) -> str:
     """
@@ -99,6 +100,11 @@ def _normalize_track_dict(track: dict, resolve_urls: bool = False, trackdb_url: 
         if key in track:
             normalized[key] = track[key]
 
+    # Copy Gosling fields
+    for key in track:
+        if key.startswith("gos_"):
+            normalized[key] = track[key]
+
     if "track" not in normalized:
         logger.warning(f"Track stanza is missing 'track' field. Skipping track: {track}")
         raise ValueError("Track stanza is missing required 'track' field")
@@ -153,12 +159,15 @@ def _parse_track_stanzas(lines, resolve_urls: bool = False, trackdb_url: str = "
     for line in lines:
         line = line.strip()
 
-        # Skip empty lines and finalize current track if present
-        if not line:
-            if current_track:
-                track_list.append(_normalize_track_dict(current_track, resolve_urls, trackdb_url))
-                current_track = {}
+        # Ignore blank lines and comments
+        if not line or line.startswith("#"):
             continue
+
+        # Add any Gosling-specific fields to the current track.
+        if line.startswith("gos_"):
+            if current_track:
+                current_track[line.split(" ", 1)[0]] = line.split(" ", 1)[1]
+                continue
 
         # Start of new track stanza
         if line.startswith("track "):
@@ -223,6 +232,8 @@ def parse_hub_from_file(hub_txt: str) -> tuple[dict, list[dict]]:
     hub_json = {}
     track_list = []
     lines = hub_txt.splitlines()
+
+    logger.debug(f"Parsing hub.txt with {len(lines)} lines")
 
     # Parse hub metadata and tracks
     for line in lines:
