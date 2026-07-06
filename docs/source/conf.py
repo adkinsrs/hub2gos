@@ -19,7 +19,8 @@ release = hub2gos.__version__
 extensions = [
     'sphinx.ext.autodoc',   # Automatically generate documentation from docstrings
     'sphinx.ext.napoleon',  # Supports clean Google/NumPy docstring styles
-    'sphinx.ext.githubpages' # Handles the .nojekyll configuration automatically
+    'sphinx.ext.githubpages', # Handles the .nojekyll configuration automatically
+    'sphinx_autodoc_typehints', # Automatically document type hints in function signatures
     'myst_parser',  # Enables Markdown support in Sphinx
 ]
 
