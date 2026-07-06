@@ -4,7 +4,7 @@
 
 [![Tests](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml/badge.svg)](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml) [![codecov](https://codecov.io/github/adkinsrs/hub2gos/graph/badge.svg?token=8AXL4214PT)](https://codecov.io/github/adkinsrs/hub2gos)
 
-Transpiler to map a UCSC Trackhub configuration to a Gosling spec
+Transpiler to map a [UCSC Trackhub](https://genome.ucsc.edu/goldenpath/help/hgTrackHubHelp.html) configuration to a [Gosling spec](https://gosling-lang.org/docs/)
 
 ## Installation
 
@@ -22,7 +22,7 @@ To compile a UCSC trackhub into a Gosling specification from the command line, s
 python -m hub2gos.cli path/to/hub.txt
 ```
 
-hub2gos supports both the standard UCSC Trackhub mode and the useOneFile mode.
+hub2gos supports both the standard [UCSC Trackhub mode](https://genome.ucsc.edu/goldenpath/help/hgTrackHubHelp.html#Setup) and the [useOneFile mode](https://genome.ucsc.edu/goldenpath/help/hgTracksHelp.html#UseOneFile).
 
 ## Running with Docker
 
@@ -53,6 +53,24 @@ options:
                         This value is not used in useOneFile mode.
   -v, --verbose         Enable detailed logging output
 ```
+
+## Scope and Limitations
+
+`hub2gos` is designed to be a rapid bootstrapping tool, not a comprehensive layout engine or validator.
+
+**What it does:**
+
+* **Automates the boilerplate:** It handles the heavy lifting of translating UCSC track hub syntax into Gosling JSON.
+* **Creates a baseline:** It generates a standard, vertical layout of your tracks to get your visualization up and running quickly.
+
+**What it does NOT do:**
+
+* **Validate data paths:** The parser maps the data URLs and file paths exactly as they appear in your track hub files. It does not ping servers or verify that the underlying bigWig or related files actually exist.  You will need to view the visualization to confirm that.
+* **Generate complex layouts:** It will not automatically build highly customized, bespoke mappings or circular views.
+* **Genomic annotation tracks** hub2gos does not assume or provide genomic annotation tracks to compare to your tracks. If you want to view an annotation, add a track with a BigBed file (with a .bed.gz path for the "gos_url" property + tabix file)
+
+**The Intended Workflow:**
+Use `hub2gos` to generate the initial JSON specification, and then manually adjust the resulting file to tweak colors, configure complex layouts, or refine the visualizations to your exact needs. There is a quick Gosling visualization tool called [quick_viewer.html](./quick_viewer.html) that you can use in a browser... just paste the JSON and click the button.
 
 ## Input Data Specifications & Compression Rules
 
