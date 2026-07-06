@@ -46,6 +46,7 @@ tag_name = "v{new_version}"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+addopts = "--cov=src/hub2gos --cov-report=xml --cov-report=term-missing"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
