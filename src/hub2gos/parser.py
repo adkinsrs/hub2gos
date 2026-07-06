@@ -9,6 +9,8 @@ import logging
 import os
 import requests
 import socket
+
+from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 logger = logging.getLogger(__name__)
@@ -20,34 +22,6 @@ VALID_CONTAINER_TYPES = ["multiWig"]
 # These are valid UCSC fields and will not include custom fields for Gosling (marked with "gos_").
 HUB_FIELDS = ["hub", "shortLabel", "longLabel", "email", "useOneFile", "genome", "genomesFile"]
 TRACK_FIELDS = ["track", "name", "type", "bigDataUrl", "shortLabel", "longLabel", "visibility", "color", "autoScale", "container", "parent"]
-
-# TODO: Support local file and remote file trackhub parsing.  Currently it's local only
-
-def fetch_trackdb_path(genomes_txt: str, assembly: str) -> str:
-    """
-    Extract the trackDb path for a specified genome assembly from UCSC genomes.txt format.
-
-    Args:
-        genomes_txt (str): The contents of a UCSC genomes.txt file as a string.
-        assembly (str): The genome assembly identifier to search for (e.g., 'hg38', 'mm10').
-
-    Returns:
-        str: The trackDb path for the specified assembly.
-
-    Raises:
-        ValueError: If the assembly is not found or trackDb entry is missing.
-
-    """
-    for line in genomes_txt.splitlines():
-        if line.startswith(f"genome {assembly}"):
-            lines = genomes_txt.splitlines()
-            next_line_index = lines.index(line) + 1
-            if next_line_index < len(lines):
-                next_line = lines[next_line_index]
-                if next_line.startswith("trackDb"):
-                    return next_line.split(" ", 1)[1]
-
-    raise ValueError(f"Assembly {assembly} not found in genomes.txt or trackDb entry is missing.")
 
 def _is_safe_public_http_url(url: str) -> bool:
     """Return True if URL is HTTP(S) and resolves only to public IP addresses."""
@@ -188,6 +162,152 @@ def _parse_track_stanzas(lines, resolve_urls: bool = False, trackdb_url: str = "
 
     return track_list
 
+def _get_parent(path: str, is_url: bool=False) -> str:
+    """
+    Get the parent directory of a given path or URL.
+
+    Args:
+        path (str): Path or URL to get the parent of.
+        is_url (bool): Whether the path is a URL.
+
+    Returns:
+        str: Parent directory path or URL.
+    """
+    if is_url:
+        parsed = urlparse(path)
+        parent_path = os.path.dirname(parsed.path)
+        return urljoin(path, parent_path + "/")
+    else:
+        return str(Path(path).parent)
+
+def _read_contents(path: str, is_url: bool=False) -> str:
+    """
+    Read the contents of a file or URL.
+
+    Args:
+        path (str): Path to a local file or URL.
+        is_url (bool): Whether the path is a URL.
+
+    Returns:
+        str: Contents of the file or URL.
+
+    Raises:
+        FileNotFoundError: If the local file does not exist.
+        requests.RequestException: If the URL cannot be fetched.
+    """
+    if is_url:
+        response = requests.get(path)
+        response.raise_for_status()
+        return response.text
+    else:
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"File not found: {path}")
+        with open(path, "r") as f:
+            return f.read()
+
+def _join_path(base: str, relative: str, is_url: bool) -> str:
+    """
+    Join a base path or URL with a relative path.
+
+    Args:
+        base (str): Base path or URL.
+        relative (str): Relative path to join.
+        is_url (bool): Whether the base is a URL.
+
+    Returns:
+        str: Joined path or URL.
+    """
+    if is_url:
+        return urljoin(base, relative)
+    return str(Path(base) / relative)
+
+def fetch_trackdb_path(genomes_txt: str, assembly: str) -> str:
+    """
+    Extract the trackDb path for a specified genome assembly from UCSC genomes.txt format.
+
+    Args:
+        genomes_txt (str): The contents of a UCSC genomes.txt file as a string.
+        assembly (str): The genome assembly identifier to search for (e.g., 'hg38', 'mm10').
+
+    Returns:
+        str: The trackDb path for the specified assembly.
+
+    Raises:
+        ValueError: If the assembly is not found or trackDb entry is missing.
+
+    """
+    for line in genomes_txt.splitlines():
+        if line.startswith(f"genome {assembly}"):
+            lines = genomes_txt.splitlines()
+            next_line_index = lines.index(line) + 1
+            if next_line_index < len(lines):
+                next_line = lines[next_line_index]
+                if next_line.startswith("trackDb"):
+                    return next_line.split(" ", 1)[1]
+
+    raise ValueError(f"Assembly {assembly} not found in genomes.txt or trackDb entry is missing.")
+
+def load_hub(hub_path: str, assembly: str | None = None) -> list[dict]:
+    """
+    Orchestrates loading and parsing a UCSC Trackhub from a local or remote source.
+
+    Args:
+        hub_path (str): Path or URL to a hub.txt file.
+        assembly (str, optional): Genome assembly (required for standard multi-file mode).
+
+    Returns:
+        list[dict]: List of parsed track stanza dictionaries ready for compilation.
+
+    Raises:
+        ValueError: If assembly is missing in standard mode or parsing fails.
+        FileNotFoundError: If required files are not found.
+    """
+    # TODO: detect remote vs local and fetch accordingly
+    is_url = False
+    if hub_path.startswith("http://") or hub_path.startswith("https://"):
+        is_url = True
+
+    hub_contents = _read_contents(hub_path, is_url)
+
+    hub_json, stanzas = parse_hub_from_file(hub_contents)
+
+    logger.debug(f"Parsed hub.json: {hub_json}")
+
+    if not validate_hub_contents(hub_json):
+        raise ValueError("Invalid hub.txt contents or track stanzas.")
+
+    if hub_json.get("useOneFile", "") == "on":
+        if validate_track_contents(stanzas):
+            return stanzas
+        raise ValueError("Invalid track stanzas in useOneFile mode.")
+
+    # Traditional mode
+    hub_dir = _get_parent(hub_path, is_url)
+
+    if not assembly:
+        raise ValueError("Assembly genome must be passed in for a standard mode UCSC Trackhub file.")
+
+    # Create the genomes file path based on the hub_dir filepath or url
+    genomes_file = _join_path(hub_dir, hub_json.get("genomesFile", "genomes.txt"), is_url)
+    logger.debug(f"Looking for genomes.txt at {genomes_file}")
+
+    genomes_contents = _read_contents(genomes_file, is_url)
+    trackdb_path = fetch_trackdb_path(genomes_contents, assembly)
+
+    trackdb_file = _join_path(hub_dir, trackdb_path, is_url)
+    logger.debug(f"Looking for trackDb.txt at {trackdb_file}")
+
+    trackdb_contents = _read_contents(trackdb_file, is_url)
+
+    try:
+        stanzas = parse_tracks_from_trackdb(trackdb_contents, trackdb_file)
+    except ValueError as e:
+        raise ValueError(f"Failed to parse trackDb from {trackdb_file}: {str(e)}") from e
+
+    if validate_track_contents(stanzas):
+        return stanzas
+    raise ValueError("Invalid track stanzas in trackDb.txt.")
+
 def parse_tracks_from_trackdb(trackdb_txt: str, trackdb_url: str) -> list[dict]:
     """
     Parse track stanzas from a UCSC trackDb.txt file.
@@ -255,20 +375,19 @@ def parse_hub_from_file(hub_txt: str) -> tuple[dict, list[dict]]:
 
     # Parse track stanzas (rest of the file after hub metadata)
     track_start_idx = next(
-        (i for i, l in enumerate(lines) if l.strip().startswith("track ")),
+        (i for i, l in enumerate(lines) if l.strip().startswith("track ")),  # noqa: E741
         len(lines)
     )
     track_list = _parse_track_stanzas(lines[track_start_idx:], resolve_urls=False, trackdb_url="")
 
     return hub_json, track_list
 
-def validate_hub_contents(hub_json: dict, track_stanzas: list) -> bool:
+def validate_hub_contents(hub_json: dict) -> bool:
     """
     Validate the contents of a UCSC Trackhub hub.txt file and its track stanzas.
 
     Args:
         hub_json (dict): Dictionary containing hub metadata.
-        track_stanzas (list): List of dictionaries, each representing a track stanza.
 
     Returns:
         bool: True if the hub contents are valid, False otherwise.
@@ -279,6 +398,17 @@ def validate_hub_contents(hub_json: dict, track_stanzas: list) -> bool:
         if field not in hub_json:
             logger.error(f"Missing required field '{field}' in hub.txt content.")
             return False
+    return True
+
+def validate_track_contents(track_stanzas: list) -> bool:
+    """
+    Validate the contents of track stanzas parsed from a UCSC Trackhub.
+
+    Args:
+        track_stanzas (list): List of dictionaries, each representing a track stanza.
+    Returns:
+        bool: True if all track stanzas are valid, False otherwise.
+    """
 
     for track in track_stanzas:
         required_track_fields = ["track", "type", "shortLabel", "longLabel", "visibility"]

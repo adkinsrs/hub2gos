@@ -30,7 +30,7 @@ hub2gos supports both the standard UCSC Trackhub mode and the useOneFile mode.
 ```text
 usage: python -m hub2gos.cli [-h] [-o OUTPUT] [-c COORDS] [-a ASSEMBLY] [-v] hub_file
 
-Convert UCSC TrackHub trackDb to a Gosling Spec
+Convert UCSC TrackHub track information to a Gosling Spec
 
 positional arguments:
   hub_file              Path to local hub.txt file. Supports both standard and useOneFile modes.
@@ -38,9 +38,12 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -o, --output OUTPUT   Output JSON file path (prints to stdout if omitted)
-  -c, --coords COORDS   Optional coordinates to set starting domain of tracks. Must be in the format 'chr:start-end' (e.g., 'chr1:1000000-2000000')
+  -c, --coords COORDS   Optional coordinates to set starting domain of tracks.
+                        Must be in the format 'chr:start-end' (e.g., 'chr1:1000000-2000000')
   -a, --assembly ASSEMBLY
-                        Optional genome assembly (e.g., 'hg38', 'mm10'). If not provided, will throw an error in standard mode. This value is not used in useOneFile mode.
+                        Optional genome assembly (e.g., 'hg38', 'mm10').
+                        If not provided, will throw an error in standard mode.
+                        This value is not used in useOneFile mode.
   -v, --verbose         Enable detailed logging output
 ```
 

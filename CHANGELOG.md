@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Print help in CLI call if no arguments provided.
+- parser.py can read hub files, and corresponding genomes and tracksDb references from a relative or a remote (http/https) location
+
+### Changed
+
+- Moved some loading functionality from cli.py into `load_hub` function in parser.py.
+
 ## [0.2.1]
 
 ### Changed
