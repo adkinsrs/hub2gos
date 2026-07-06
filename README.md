@@ -98,3 +98,9 @@ None of these contraints will prevent you from generating the Gosling spec JSON.
 1. **Plaintext Text Files:** Uncompressed tabular streams (e.g., raw `.bed` or `.vcf` text targets) are unsupported for chunked client-side streaming. Text tracking formats must be block-gzipped using `bgzip` before indexing. [Documentation on bgzip](https://www.htslib.org/doc/bgzip.html)
 2. **Alternative Compressors:** High-ratio archival compressors such as `bzip2` (`.bz2`) or `xz` (`.xz`) are completely unsupported. These engines do not produce block-level byte partitions, making selective genomic coordinate slicing over network requests impossible.
 3. For any track type that recommends serving files on a HiGlass server, you can peruse the [HiGlass documentation](https://docs.higlass.io/) to learn how to set up a HiGlass server, aggregate files with Clodius, and ingest them into HiGlass.
+
+## Citations
+
+* S. LYi, Q. Wang, F. Lekschas and N. Gehlenborg, "Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization," in IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 140-150, Jan. 2022, doi: 10.1109/TVCG.2021.3114876.
+keywords: {Genomics;Bioinformatics;Data visualization;Tools;Grammar;Biological cells;Visualization;Genomics;declarative specification;visualization grammar},
+* Brian J. Raney, Timothy R. Dreszer, Galt P. Barber, Hiram Clawson, Pauline A. Fujita, Ting Wang, Ngan Nguyen, Benedict Paten, Ann S. Zweig, Donna Karolchik, W. James Kent, Track data hubs enable visualization of user-defined genome-wide annotations on the UCSC Genome Browser, Bioinformatics, Volume 30, Issue 7, April 2014, Pages 1003–1005, https://doi.org/10.1093/bioinformatics/btt637
