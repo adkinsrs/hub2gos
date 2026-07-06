@@ -45,6 +45,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="0.2" />
@@ -129,6 +130,12 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changelog.html">
+    Changelog
+  </a>
+</li>
+
   </ul>
 </nav></div>
       
@@ -211,6 +218,12 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="changelog.html">
+    Changelog
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -270,15 +283,134 @@
                   
   <section id="welcome-to-hub2gos-documentation">
 <h1>Welcome to hub2gos documentation!<a class="headerlink" href="#welcome-to-hub2gos-documentation" title="Link to this heading">#</a></h1>
-<div class="toctree-wrapper compound">
+<section id="hub2gos">
+<h2>hub2gos<a class="headerlink" href="#hub2gos" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://pypi.org/project/hub2gos/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/hub2gos" /></a> <a class="reference external" href="https://pypi.org/project/hub2gos/"><img alt="Supported Python Versions" src="https://img.shields.io/pypi/pyversions/hub2gos" /></a> <a class="reference external" href="https://github.com/adkinsrs/hub2gos/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/github/license/adkinsrs/hub2gos" /></a></p>
+<p><a class="reference external" href="https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml"><img alt="Tests" src="https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml/badge.svg" /></a> <a class="reference external" href="https://codecov.io/github/adkinsrs/hub2gos"><img alt="codecov" src="https://codecov.io/github/adkinsrs/hub2gos/graph/badge.svg?token=8AXL4214PT" /></a></p>
+<p>Transpiler to map a UCSC Trackhub configuration to a Gosling spec</p>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h3>
+<p>Install the package directly from PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>hub2gos
+</pre></div>
 </div>
 </section>
+<section id="quickstart">
+<h3>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h3>
+<p>To compile a UCSC trackhub into a Gosling specification from the command line, simply point the transpiler at your hub.txt file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>hub2gos.cli<span class="w"> </span>path/to/hub.txt
+</pre></div>
+</div>
+<p>hub2gos supports both the standard UCSC Trackhub mode and the useOneFile mode.</p>
+</section>
+<section id="cli-usage">
+<h3>CLI Usage<a class="headerlink" href="#cli-usage" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: python -m hub2gos.cli [-h] [-o OUTPUT] [-c COORDS] [-a ASSEMBLY] [-v] hub_file
+
+Convert UCSC TrackHub track information to a Gosling Spec
+
+positional arguments:
+  hub_file              Path to local hub.txt file. Supports both standard and useOneFile modes.
+
+options:
+  -h, --help            show this help message and exit
+  -o, --output OUTPUT   Output JSON file path (prints to stdout if omitted)
+  -c, --coords COORDS   Optional coordinates to set starting domain of tracks.
+                        Must be in the format &#39;chr:start-end&#39; (e.g., &#39;chr1:1000000-2000000&#39;)
+  -a, --assembly ASSEMBLY
+                        Optional genome assembly (e.g., &#39;hg38&#39;, &#39;mm10&#39;).
+                        If not provided, will throw an error in standard mode.
+                        This value is not used in useOneFile mode.
+  -v, --verbose         Enable detailed logging output
+</pre></div>
+</div>
+</section>
+<section id="input-data-specifications-compression-rules">
+<h3>Input Data Specifications &amp; Compression Rules<a class="headerlink" href="#input-data-specifications-compression-rules" title="Link to this heading">#</a></h3>
+<p>When converting a UCSC Track Hub configuration using <code class="docutils literal notranslate"><span class="pre">hub2gos</span></code>, input data URLs must adhere strictly to the coordinate streaming capabilities of modern web browsers. In addition, some UCSC Track Hub file types are not compatible and must have an alternate file path under the <code class="docutils literal notranslate"><span class="pre">gos_url</span></code> property that will be used to read the data into Gosling instead.  Otherwise the transpiler will use the <code class="docutils literal notranslate"><span class="pre">bigDataUrl</span></code> property instead.</p>
+<p>This utility will return a Gosling Spec for the UCSC trackhub input, but does not validate that the supplied paths are streamable. There is a HTML page called <code class="docutils literal notranslate"><span class="pre">quick_viewer.html</span></code> on the top-level of this repository that can be used to validate the Gosling visualization itself by passing in the JSON spec.</p>
+<section id="supported-formats-compression-matrices">
+<h4>Supported Formats &amp; Compression Matrices<a class="headerlink" href="#supported-formats-compression-matrices" title="Link to this heading">#</a></h4>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>UCSC Track Type</p></th>
+<th class="head text-left"><p>Expected File Suffix(es)</p></th>
+<th class="head text-left"><p>gos_url file?</p></th>
+<th class="head text-left"><p>Tabix Index Required?</p></th>
+<th class="head text-left"><p>Work-in-progress?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>BAM</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.bam</span></code></p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p>Yes (<code class="docutils literal notranslate"><span class="pre">.bam.bai</span></code>)</p></td>
+<td class="text-left"><p>Yes</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>BigBed</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.bb</span></code>, <code class="docutils literal notranslate"><span class="pre">.bigbed</span></code></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.bed.gz</span></code></p></td>
+<td class="text-left"><p><strong>Yes (BGZF-formatted <code class="docutils literal notranslate"><span class="pre">.tbi</span></code>)</strong></p></td>
+<td class="text-left"><p>No</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>BigInteract</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.bi</span></code>, <code class="docutils literal notranslate"><span class="pre">.bigInteract</span></code></p></td>
+<td class="text-left"><p>“beddb” HiGlass tileset</p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p>No</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>BigWig</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.bw</span></code>, <code class="docutils literal notranslate"><span class="pre">.bigwig</span></code></p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p>No</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>HiC</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.hic</span></code></p></td>
+<td class="text-left"><p>“cooler” HiGlass tileset</p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p>No</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>VCF</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">.vcf.gz</span></code></p></td>
+<td class="text-left"><p>No</p></td>
+<td class="text-left"><p><strong>Yes (BGZF-formatted <code class="docutils literal notranslate"><span class="pre">.tbi</span></code>)</strong></p></td>
+<td class="text-left"><p>Yes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p>⚠️ <strong>Performance Note on BAM Tracks:</strong> While natively supported by Gosling, rendering BAM files over a broad genomic coordinate range can degrade client-side performance. For better performance, consider converting BAM files to BigWig (for depth density) or BigBed/BED (for structural mutations) during your server pipeline staging.</p>
+</div></blockquote>
+</section>
+<section id="crucial-constraints">
+<h4>Crucial Constraints<a class="headerlink" href="#crucial-constraints" title="Link to this heading">#</a></h4>
+<p>None of these contraints will prevent you from generating the Gosling spec JSON. They will however prevent you from streaming the data in the Gosling viewer.</p>
+<ol class="arabic simple">
+<li><p><strong>Plaintext Text Files:</strong> Uncompressed tabular streams (e.g., raw <code class="docutils literal notranslate"><span class="pre">.bed</span></code> or <code class="docutils literal notranslate"><span class="pre">.vcf</span></code> text targets) are unsupported for chunked client-side streaming. Text tracking formats must be block-gzipped using <code class="docutils literal notranslate"><span class="pre">bgzip</span></code> before indexing. <a class="reference external" href="https://www.htslib.org/doc/bgzip.html">Documentation on bgzip</a></p></li>
+<li><p><strong>Alternative Compressors:</strong> High-ratio archival compressors such as <code class="docutils literal notranslate"><span class="pre">bzip2</span></code> (<code class="docutils literal notranslate"><span class="pre">.bz2</span></code>) or <code class="docutils literal notranslate"><span class="pre">xz</span></code> (<code class="docutils literal notranslate"><span class="pre">.xz</span></code>) are completely unsupported. These engines do not produce block-level byte partitions, making selective genomic coordinate slicing over network requests impossible.</p></li>
+<li><p>For any track type that recommends serving files on a HiGlass server, you can peruse the <a class="reference external" href="https://docs.higlass.io/">HiGlass documentation</a> to learn how to set up a HiGlass server, aggregate files with Clodius, and ingest them into HiGlass.</p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+<section id="module-hub2gos.cli">
+<span id="cli-reference"></span><h1>CLI Reference<a class="headerlink" href="#module-hub2gos.cli" title="Link to this heading">#</a></h1>
+<p>Command line interface to convert UCSC TrackHub trackDb files into Gosling JSON specifications.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.cli.main">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.cli.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
 <section id="module-hub2gos.compiler">
-<span id="core-compiler-modules"></span><h1>Core Compiler Modules<a class="headerlink" href="#module-hub2gos.compiler" title="Link to this heading">#</a></h1>
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-hub2gos.compiler" title="Link to this heading">#</a></h1>
 <p>Takes parsed UCSC Trackhub file track stanzas and returns a vertical Gosling View containing all tracks and containers.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="hub2gos.compiler.compile_track_stanzas">
-<span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_track_stanzas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_descriptors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">View</span></span></span><a class="headerlink" href="#hub2gos.compiler.compile_track_stanzas" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">hub2gos.compiler.</span></span><span class="sig-name descname"><span class="pre">compile_track_stanzas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_descriptors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.compiler.compile_track_stanzas" title="Link to this definition">#</a></dt>
 <dd><p>Compiles a list of UCSC Trackhub track stanzas into a vertical Gosling View.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -315,10 +447,273 @@
 <p>Adds a base padding of 1500 base pairs to both sides of the specified genomic interval.</p>
 </dd></dl>
 
-</section>
-<section id="module-hub2gos.factory">
-<span id="track-factory-engine"></span><h1>Track Factory Engine<a class="headerlink" href="#module-hub2gos.factory" title="Link to this heading">#</a></h1>
-<p>Takes an existing UCSC Trackhub track stanza and returns the appropriate Gosling Track or View Spec subclass instance.</p>
+<p id="module-hub2gos.components">Handles Gosling Track configurations for different data types (BigWig, BED, BigInteract).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.BamSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">BamSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BamSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>This class is a work in progress and may not be fully functional.</p>
+<p>Represents a Gosling Track specification for BAM (Binary Alignment/Map) files.
+An index file is required for this track type and is assumed to be located at the same URL with a .bai extension.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.BamSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BamSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the Bam track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.BedSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">BedSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BedSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>Represents a Gosling Track specification for BED files.
+Since BigBed files are not directly supported in Gosling, this method uses a gzipped BED file for visualization.
+An index file is required for this track type and is assumed to be located at the same URL with a BGZF-formatted .tbi extension.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.BedSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BedSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the BigBed track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.BigInteractSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">BigInteractSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BigInteractSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>Represents a Gosling Track specification for BigInteract (chromatin interaction) files.
+This class is designed to handle BigInteract data visualization using a BEDDB-formatted file, which is typically stored on a HiGlass server.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.BigInteractSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BigInteractSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the BigInteract track.
+Since BigInteract files are only compatible with UCSC, this method uses a BEDDB-formatted file for visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.BigWigSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">BigWigSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BigWigSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>Represents a Gosling Track specification for BigWig files.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.BigWigSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.BigWigSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the BigWig track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.HiCSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">HiCSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.HiCSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>Represents a Gosling Track specification for HiC (chromatin interaction) files.
+This class is designed to handle HiC data visualization using a cooler-formatted file, which is typically stored on a HiGlass server.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.HiCSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.HiCSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the HiC track.
+Since HiC files are only compatible with UCSC, this method uses a cooler-formatted file for visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.TrackSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">TrackSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.TrackSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for Gosling Track specifications. Subclasses should implement the get_encoding method to define how the track is rendered.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.TrackSpec.get_encoding">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.TrackSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Abstract method to be implemented by subclasses to return the Gosling encoding for the track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – A prefix to be added to the track ID.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em>) – Whether the track is a child track in a composite view.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.TrackSpec.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.TrackSpec.render" title="Link to this definition">#</a></dt>
+<dd><p>Renders the track encoding if the visibility is not set to “hide”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prefix</strong> (<em>str</em>) – A prefix to be added to the track ID.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Gosling Track object if visibility is not “hide”, otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.components.VcfSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.components.</span></span><span class="sig-name descname"><span class="pre">VcfSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'steelblue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.VcfSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.components.TrackSpec" title="hub2gos.components.TrackSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrackSpec</span></code></a></p>
+<p>This class is a work in progress and may not be fully functional.</p>
+<p>Represents a Gosling Track specification for VCF (Variant Call Format) files.  The file must be gzipped
+An index file is required for this track type and is assumed to be located at the same URL with a BGZF-formatted .tbi extension.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.components.VcfSpec.get_encoding">
+<span class="sig-name descname"><span class="pre">get_encoding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_child</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.components.VcfSpec.get_encoding" title="Link to this definition">#</a></dt>
+<dd><p>Gets the Gosling encoding for the VCF track.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – The width of the track.</p></li>
+<li><p><strong>height</strong> (<em>int</em>) – The height of the track.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – A prefix to be added to the track ID. Defaults to “”.</p></li>
+<li><p><strong>is_child</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the track is a child track in a composite view. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling Track object representing the track encoding.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gos.Track</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-hub2gos.containers">Handles Gosling specialty View configurations (i.e. grouping multiple tracks into a single view).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.containers.MultiWigSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.containers.</span></span><span class="sig-name descname"><span class="pre">MultiWigSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.containers.MultiWigSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#hub2gos.containers.ViewSpec" title="hub2gos.containers.ViewSpec"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewSpec</span></code></a></p>
+<p>Represents a Gosling View specification that can contain multiple wiggle tracks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.containers.MultiWigSpec.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.containers.MultiWigSpec.render" title="Link to this definition">#</a></dt>
+<dd><p>Renders the Gosling view specification for the MultiWigSpec.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prefix</strong> (<em>str</em>) – A prefix to be added to the view’s identifier.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Gosling overlay object representing the view, or None if the view is hidden.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="hub2gos.containers.ViewSpec">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.containers.</span></span><span class="sig-name descname"><span class="pre">ViewSpec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ident</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'full'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.containers.ViewSpec" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a Gosling View specification that can contain multiple tracks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="hub2gos.containers.ViewSpec.add_member">
+<span class="sig-name descname"><span class="pre">add_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.containers.ViewSpec.add_member" title="Link to this definition">#</a></dt>
+<dd><p>Adds a TrackSpec member to the view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-hub2gos.factory">Takes an existing UCSC Trackhub track stanza and returns the appropriate Gosling Track or View Spec subclass instance.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="hub2gos.factory.TrackSpecFactory">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">hub2gos.factory.</span></span><span class="sig-name descname"><span class="pre">TrackSpecFactory</span></span><a class="headerlink" href="#hub2gos.factory.TrackSpecFactory" title="Link to this definition">#</a></dt>
@@ -326,8 +721,13 @@
 <p>Factory class to create Gosling TrackSpec instances based on UCSC Trackhub track stanzas.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="hub2gos.factory.TrackSpecFactory.create_track">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">getattr</span></span></span><a class="headerlink" href="#hub2gos.factory.TrackSpecFactory.create_track" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.factory.TrackSpecFactory.create_track" title="Link to this definition">#</a></dt>
 <dd><p>Create a Gosling TrackSpec instance based on the provided UCSC Trackhub track stanza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">getattr</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -339,12 +739,214 @@
 <p>Factory class to create Gosling ViewSpec instances based on UCSC Trackhub view stanzas.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="hub2gos.factory.ViewSpecFactory.create_view">
-<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">getattr</span></span></span><a class="headerlink" href="#hub2gos.factory.ViewSpecFactory.create_view" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stanza</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.factory.ViewSpecFactory.create_view" title="Link to this definition">#</a></dt>
 <dd><p>Create a Gosling ViewSpec instance based on the provided UCSC Trackhub view stanza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">getattr</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
+<p id="module-hub2gos.parser">Parse a UCSC Trackhub file and return a list of track stanzas as dictionaries.</p>
+<p>Can accept UCSC useOneFile mode trackhub files or the more common multi-file trackhub format.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.fetch_trackdb_path">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">fetch_trackdb_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genomes_txt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assembly</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.fetch_trackdb_path" title="Link to this definition">#</a></dt>
+<dd><p>Extract the trackDb path for a specified genome assembly from UCSC genomes.txt format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genomes_txt</strong> (<em>str</em>) – The contents of a UCSC genomes.txt file as a string.</p></li>
+<li><p><strong>assembly</strong> (<em>str</em>) – The genome assembly identifier to search for (e.g., ‘hg38’, ‘mm10’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The trackDb path for the specified assembly.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the assembly is not found or trackDb entry is missing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.load_hub">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">load_hub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hub_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assembly</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.load_hub" title="Link to this definition">#</a></dt>
+<dd><p>Orchestrates loading and parsing a UCSC Trackhub from a local or remote source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hub_path</strong> (<em>str</em>) – Path or URL to a hub.txt file.</p></li>
+<li><p><strong>assembly</strong> (<em>str</em><em>, </em><em>optional</em>) – Genome assembly (required for standard multi-file mode).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of parsed track stanza dictionaries ready for compilation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If assembly is missing in standard mode or parsing fails.</p></li>
+<li><p><strong>FileNotFoundError</strong> – If required files are not found.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.parse_hub_from_file">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">parse_hub_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hub_txt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.parse_hub_from_file" title="Link to this definition">#</a></dt>
+<dd><p>Parse hub.txt file in useOneFile mode into hub metadata and track stanzas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hub_txt</strong> (<em>str</em>) – The contents of a hub.txt file in useOneFile mode.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>(hub_dict, track_stanzas_list)</dt><dd><ul class="simple">
+<li><p>hub_dict: Dictionary with hub metadata (hub, shortLabel, longLabel, email, useOneFile, genome)</p></li>
+<li><p>track_stanzas_list: List of track dictionaries</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>In useOneFile mode, the hub.txt file contains both hub metadata and track definitions.
+Track stanzas begin with ‘track &lt;name&gt;’ and are separated by blank lines.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.parse_tracks_from_trackdb">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">parse_tracks_from_trackdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trackdb_txt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trackdb_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.parse_tracks_from_trackdb" title="Link to this definition">#</a></dt>
+<dd><p>Parse track stanzas from a UCSC trackDb.txt file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trackdb_txt</strong> (<em>str</em>) – The contents of a UCSC trackDb.txt file.</p></li>
+<li><p><strong>trackdb_url</strong> (<em>str</em>) – The base URL of the trackDb.txt file (used to resolve relative URLs).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list of dictionaries, each representing a track with keys like ‘track’, ‘type’,</dt><dd><p>’bigDataUrl’, ‘shortLabel’, ‘longLabel’, ‘color’, ‘visibility’, etc.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Example track dict:</dt><dd><dl class="simple">
+<dt>{</dt><dd><p>“name”: “P1HC_ATAC_1”,
+“type”: “bigWig”,
+“bigDataUrl”: “<a class="reference external" href="https://example.com/P1HC_ATAC_1.bigwig">https://example.com/P1HC_ATAC_1.bigwig</a>”,
+“shortLabel”: “ATAC-seq 1st replicate”,
+“longLabel”: “ATAC-seq 1st replicate”,
+“color”: “rgb(31,119,180)”,
+“visibility”: “dense”,</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.validate_hub_contents">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">validate_hub_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hub_json</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.validate_hub_contents" title="Link to this definition">#</a></dt>
+<dd><p>Validate the contents of a UCSC Trackhub hub.txt file and its track stanzas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hub_json</strong> (<em>dict</em>) – Dictionary containing hub metadata.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the hub contents are valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.parser.validate_track_contents">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.parser.</span></span><span class="sig-name descname"><span class="pre">validate_track_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">track_stanzas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.parser.validate_track_contents" title="Link to this definition">#</a></dt>
+<dd><p>Validate the contents of track stanzas parsed from a UCSC Trackhub.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>track_stanzas</strong> (<em>list</em>) – List of dictionaries, each representing a track stanza.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all track stanzas are valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-hub2gos.utils">Functions that don’t really fit in any other module, but are used in multiple places.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.utils.find_node_by_id">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.utils.</span></span><span class="sig-name descname"><span class="pre">find_node_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.utils.find_node_by_id" title="Link to this definition">#</a></dt>
+<dd><p>Recursively search a Gosling specification for a specific ‘id’.
+Returns the node if found, otherwise returns None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.utils.parse_position_str">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.utils.</span></span><span class="sig-name descname"><span class="pre">parse_position_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.utils.parse_position_str" title="Link to this definition">#</a></dt>
+<dd><p>Parses a position string in the format ‘chromosome:start-end’ and returns its components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>position_str</strong> (<em>str</em>) – The position string to parse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A tuple containing (assembly, chromosome, start, end) if parsing is successful,</dt><dd><p>otherwise (None, None, None) on failure.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hub2gos.utils.replace_node_by_id">
+<span class="sig-prename descclassname"><span class="pre">hub2gos.utils.</span></span><span class="sig-name descname"><span class="pre">replace_node_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hub2gos.utils.replace_node_by_id" title="Link to this definition">#</a></dt>
+<dd><p>Recursively search a Gosling specification for a specific ‘id’ and replace that node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
 </section>
 
 
@@ -357,6 +959,15 @@
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="right-next"
+       href="changelog.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Changelog</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -376,13 +987,64 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hub2gos documentation!</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.compiler">Core Compiler Modules</a><ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.compile_track_stanzas"><code class="docutils literal notranslate"><span class="pre">compile_track_stanzas()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.zoom_view_to_domain"><code class="docutils literal notranslate"><span class="pre">zoom_view_to_domain()</span></code></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Welcome to hub2gos documentation!</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos">hub2gos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quickstart">Quickstart</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-usage">CLI Usage</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#input-data-specifications-compression-rules">Input Data Specifications &amp; Compression Rules</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-formats-compression-matrices">Supported Formats &amp; Compression Matrices</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#crucial-constraints">Crucial Constraints</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.factory">Track Factory Engine</a><ul class="pst-show_toc_level nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.cli">CLI Reference</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.cli.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#module-hub2gos.compiler">API Reference</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.compile_track_stanzas"><code class="docutils literal notranslate"><span class="pre">compile_track_stanzas()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.compiler.zoom_view_to_domain"><code class="docutils literal notranslate"><span class="pre">zoom_view_to_domain()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BamSpec"><code class="docutils literal notranslate"><span class="pre">BamSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BamSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">BamSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BedSpec"><code class="docutils literal notranslate"><span class="pre">BedSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BedSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">BedSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BigInteractSpec"><code class="docutils literal notranslate"><span class="pre">BigInteractSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BigInteractSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">BigInteractSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BigWigSpec"><code class="docutils literal notranslate"><span class="pre">BigWigSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.BigWigSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">BigWigSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.HiCSpec"><code class="docutils literal notranslate"><span class="pre">HiCSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.HiCSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">HiCSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.TrackSpec"><code class="docutils literal notranslate"><span class="pre">TrackSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.TrackSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">TrackSpec.get_encoding()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.TrackSpec.render"><code class="docutils literal notranslate"><span class="pre">TrackSpec.render()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.VcfSpec"><code class="docutils literal notranslate"><span class="pre">VcfSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.components.VcfSpec.get_encoding"><code class="docutils literal notranslate"><span class="pre">VcfSpec.get_encoding()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.containers.MultiWigSpec"><code class="docutils literal notranslate"><span class="pre">MultiWigSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.containers.MultiWigSpec.render"><code class="docutils literal notranslate"><span class="pre">MultiWigSpec.render()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.containers.ViewSpec"><code class="docutils literal notranslate"><span class="pre">ViewSpec</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.containers.ViewSpec.add_member"><code class="docutils literal notranslate"><span class="pre">ViewSpec.add_member()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.factory.TrackSpecFactory"><code class="docutils literal notranslate"><span class="pre">TrackSpecFactory</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.factory.TrackSpecFactory.create_track"><code class="docutils literal notranslate"><span class="pre">TrackSpecFactory.create_track()</span></code></a></li>
 </ul>
@@ -391,6 +1053,15 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.factory.ViewSpecFactory.create_view"><code class="docutils literal notranslate"><span class="pre">ViewSpecFactory.create_view()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.fetch_trackdb_path"><code class="docutils literal notranslate"><span class="pre">fetch_trackdb_path()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.load_hub"><code class="docutils literal notranslate"><span class="pre">load_hub()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.parse_hub_from_file"><code class="docutils literal notranslate"><span class="pre">parse_hub_from_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.parse_tracks_from_trackdb"><code class="docutils literal notranslate"><span class="pre">parse_tracks_from_trackdb()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.validate_hub_contents"><code class="docutils literal notranslate"><span class="pre">validate_hub_contents()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.parser.validate_track_contents"><code class="docutils literal notranslate"><span class="pre">validate_track_contents()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.utils.find_node_by_id"><code class="docutils literal notranslate"><span class="pre">find_node_by_id()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.utils.parse_position_str"><code class="docutils literal notranslate"><span class="pre">parse_position_str()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hub2gos.utils.replace_node_by_id"><code class="docutils literal notranslate"><span class="pre">replace_node_by_id()</span></code></a></li>
 </ul>
 </li>
 </ul>
