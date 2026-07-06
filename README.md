@@ -3,7 +3,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/hub2gos)](https://pypi.org/project/hub2gos/) [![Supported Python Versions](https://img.shields.io/pypi/pyversions/hub2gos)](https://pypi.org/project/hub2gos/) [![License](https://img.shields.io/github/license/adkinsrs/hub2gos)](https://github.com/adkinsrs/hub2gos/blob/main/LICENSE)
 
 [![Tests](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml/badge.svg)](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml) [![codecov](https://codecov.io/github/adkinsrs/hub2gos/graph/badge.svg?token=8AXL4214PT)](https://codecov.io/github/adkinsrs/hub2gos)
-s
+
 Transpiler to map a UCSC Trackhub configuration to a Gosling spec
 
 ## Installation
