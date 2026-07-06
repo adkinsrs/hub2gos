@@ -24,6 +24,14 @@ python -m hub2gos.cli path/to/hub.txt
 
 hub2gos supports both the standard UCSC Trackhub mode and the useOneFile mode.
 
+## Running with Docker
+
+The hub2gos tool can also be run in a Docker container.
+
+```bash
+docker run -v $(pwd):/data ghcr.io/adkinsrs/hub2gos /data/hub.txt
+```
+
 ## CLI Usage
 
 ```text
