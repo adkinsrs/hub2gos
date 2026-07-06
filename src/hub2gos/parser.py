@@ -15,7 +15,8 @@ from urllib.parse import urljoin, urlparse
 
 logger = logging.getLogger(__name__)
 
-VALID_TYPES = ["bigWig", "bigBed", "hic", "vcfTabix"]
+# TODO: Move to a constants file since this has common stuff to the factory module.
+VALID_TYPES = ["bam", "bigWig", "bigBed", "bigInteract", "hic", "vcfTabix"]
 VALID_CONTAINER_TYPES = ["multiWig"]
 
 # These are the fields that we will use for Gosling, though other fields will be preserved for compatibility with the UCSC Genome Browser.
@@ -393,11 +394,16 @@ def validate_hub_contents(hub_json: dict) -> bool:
         bool: True if the hub contents are valid, False otherwise.
     """
 
-    required_hub_fields = ["hub", "shortLabel", "longLabel", "email", "useOneFile", "genome"]
+    required_hub_fields = ["hub", "shortLabel", "longLabel", "email"]
+    exclusive_fields = ["genome", "genomesFile"]
     for field in required_hub_fields:
         if field not in hub_json:
             logger.error(f"Missing required field '{field}' in hub.txt content.")
             return False
+    # Must have one of the exclusive fields (bigDataUrl for data tracks, container for container tracks)
+    if not any(field in hub_json for field in exclusive_fields):
+        logger.error(f"Hub must have either 'genome' or 'genomesFile' field.")
+        return False
     return True
 
 def validate_track_contents(track_stanzas: list) -> bool:
@@ -415,6 +421,9 @@ def validate_track_contents(track_stanzas: list) -> bool:
         exclusive_track_fields = ["bigDataUrl", "container"]
         for field in required_track_fields:
             if field not in track:
+                if field == "visibility" and "parent" in track:
+                    # If the track has a parent, visibility is optional and can be inherited
+                    continue
                 logger.error(f"Missing required field '{field}' in track stanza.")
                 return False
         # Must have one of the exclusive fields (bigDataUrl for data tracks, container for container tracks)

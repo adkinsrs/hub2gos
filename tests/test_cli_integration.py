@@ -79,7 +79,7 @@ class TestCliNormalMode:
     def test_missing_assembly_failure(self):
         result = run_cli(NORMAL_HUB)
         assert result.returncode != 0
-        assert "assembly must be specified" in result.stderr.lower()
+        assert "assembly genome must be passed" in result.stderr.lower()
 
     def test_runs_without_error(self):
         result = run_cli(NORMAL_HUB, "-a", "mm10")
@@ -140,11 +140,12 @@ class TestCliEdgeCases:
     def test_help_flag(self):
         result = run_cli("--help")
         assert result.returncode == 0
-        assert "trackdb" in result.stdout.lower()
+        assert "trackhub" in result.stdout.lower()
 
-    def test_no_args_exits_nonzero(self):
+    def test_no_args_exits_zero(self):
+        # Prints help page
         result = run_cli()
-        assert result.returncode != 0
+        assert result.returncode == 0
 
     def test_stdout_is_empty_when_output_file_given(self, tmp_path):
         out_file = tmp_path / "out.json"
