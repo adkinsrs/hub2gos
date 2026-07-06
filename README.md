@@ -3,8 +3,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/hub2gos)](https://pypi.org/project/hub2gos/) [![Supported Python Versions](https://img.shields.io/pypi/pyversions/hub2gos)](https://pypi.org/project/hub2gos/) [![License](https://img.shields.io/github/license/adkinsrs/hub2gos)](https://github.com/adkinsrs/hub2gos/blob/main/LICENSE)
 
 [![Tests](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml/badge.svg)](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml) [![codecov](https://codecov.io/github/adkinsrs/hub2gos/graph/badge.svg?token=8AXL4214PT)](https://codecov.io/github/adkinsrs/hub2gos)
-
-
+s
 Transpiler to map a UCSC Trackhub configuration to a Gosling spec
 
 ## Installation
@@ -58,7 +57,7 @@ This utility will return a Gosling Spec for the UCSC trackhub input, but does no
 | UCSC Track Type | Expected File Suffix(es) | gos_url file? | Tabix Index Required? | Work-in-progress? |
 | :--- | :--- | :--- | :--- | :--- |
 | **BAM** | `.bam` | No | Yes (`.bam.bai`) | Yes |
-| **BigBed** | `.bb`, `.bigbed` | `.bed.gz` | **Yes (BGZF-formatted `.tbi`)**  | No |
+| **BigBed** | `.bb`, `.bigbed` | `.bed.gz` | **Yes (BGZF-formatted `.tbi`)** | No |
 | **BigInteract** | `.bi`, `.bigInteract` | "beddb" HiGlass tileset | No | No |
 | **BigWig** | `.bw`, `.bigwig` | No | No | No |
 | **HiC** | `.hic` | "cooler" HiGlass tileset | No | No |
