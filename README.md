@@ -1,10 +1,48 @@
 # hub2gos
 
 [![PyPI Version](https://img.shields.io/pypi/v/hub2gos)](https://pypi.org/project/hub2gos/) [![Supported Python Versions](https://img.shields.io/pypi/pyversions/hub2gos)](https://pypi.org/project/hub2gos/) [![License](https://img.shields.io/github/license/adkinsrs/hub2gos)](https://github.com/adkinsrs/hub2gos/blob/main/LICENSE)
+
 [![Tests](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml/badge.svg)](https://github.com/adkinsrs/hub2gos/actions/workflows/test.yml) [![codecov](https://codecov.io/github/adkinsrs/hub2gos/graph/badge.svg?token=8AXL4214PT)](https://codecov.io/github/adkinsrs/hub2gos)
 
 
 Transpiler to map a UCSC Trackhub configuration to a Gosling spec
+
+## Installation
+
+Install the package directly from PyPI:
+
+```bash
+pip install hub2gos
+```
+
+## Quickstart
+
+To compile a UCSC trackhub into a Gosling specification from the command line, simply point the transpiler at your hub.txt file:
+
+```bash
+python -m hub2gos.cli path/to/hub.txt
+```
+
+hub2gos supports both the standard UCSC Trackhub mode and the useOneFile mode.
+
+## CLI Usage
+
+```text
+usage: python -m hub2gos.cli [-h] [-o OUTPUT] [-c COORDS] [-a ASSEMBLY] [-v] hub_file
+
+Convert UCSC TrackHub trackDb to a Gosling Spec
+
+positional arguments:
+  hub_file              Path to local hub.txt file. Supports both standard and useOneFile modes.
+
+options:
+  -h, --help            show this help message and exit
+  -o, --output OUTPUT   Output JSON file path (prints to stdout if omitted)
+  -c, --coords COORDS   Optional coordinates to set starting domain of tracks. Must be in the format 'chr:start-end' (e.g., 'chr1:1000000-2000000')
+  -a, --assembly ASSEMBLY
+                        Optional genome assembly (e.g., 'hg38', 'mm10'). If not provided, will throw an error in standard mode. This value is not used in useOneFile mode.
+  -v, --verbose         Enable detailed logging output
+```
 
 ## Input Data Specifications & Compression Rules
 
