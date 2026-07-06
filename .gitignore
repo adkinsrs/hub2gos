@@ -221,3 +221,4 @@ __marimo__/
 tests/data/oneFileMode/*.live.txt
 tests/data/normalMode/**/*.live.txt
 **/.DS_Store
+.markdownlint.json

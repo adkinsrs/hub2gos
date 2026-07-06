@@ -12,6 +12,9 @@ from .compiler import compile_track_stanzas
 logger = logging.getLogger(__name__)
 
 def main():
+    """
+    Entrypoint for the CLI
+    """
 
     parser = argparse.ArgumentParser(description="Convert UCSC TrackHub track information to a Gosling Spec")
     parser.add_argument("hub_file", help="Path to local hub.txt file. Supports both standard and useOneFile modes.")
