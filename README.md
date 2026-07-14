@@ -104,3 +104,7 @@ None of these contraints will prevent you from generating the Gosling spec JSON.
 * S. LYi, Q. Wang, F. Lekschas and N. Gehlenborg, "Gosling: A Grammar-based Toolkit for Scalable and Interactive Genomics Data Visualization," in IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 140-150, Jan. 2022, doi: 10.1109/TVCG.2021.3114876.
 keywords: {Genomics;Bioinformatics;Data visualization;Tools;Grammar;Biological cells;Visualization;Genomics;declarative specification;visualization grammar},
 * Brian J. Raney, Timothy R. Dreszer, Galt P. Barber, Hiram Clawson, Pauline A. Fujita, Ting Wang, Ngan Nguyen, Benedict Paten, Ann S. Zweig, Donna Karolchik, W. James Kent, Track data hubs enable visualization of user-defined genome-wide annotations on the UCSC Genome Browser, Bioinformatics, Volume 30, Issue 7, April 2014, Pages 1003–1005, https://doi.org/10.1093/bioinformatics/btt637
+
+## AI Disclosure
+
+AI assistants were utilized to generate CI/CD workflows (Github Actions, Codecov), test boilerplate, and documentation templates. The core parsing logic, biological data mapping, and architectural design were authored manually.
