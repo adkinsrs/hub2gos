@@ -107,4 +107,4 @@ keywords: {Genomics;Bioinformatics;Data visualization;Tools;Grammar;Biological c
 
 ## AI Disclosure
 
-AI assistants were utilized to generate CI/CD workflows (Github Actions, Codecov), test boilerplate, and documentation templates. The core parsing logic, biological data mapping, and architectural design were authored manually.
+AI assistants were utilized to generate CI/CD workflows (Github Actions, Codecov), test boilerplate, and documentation templates. The core parsing logic, biological data mapping, and architectural design were authored manually. The original code was migrated from my own work on [gEAR](https://github.com/IGS/gEAR)
